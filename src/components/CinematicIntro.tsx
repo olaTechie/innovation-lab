@@ -51,7 +51,7 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
   }, [phase, currentSlide, onComplete])
 
   useEffect(() => {
-    const delay = phase === 'number' ? 1800 : 3200
+    const delay = phase === 'number' ? 1000 : 2000
     const timer = setTimeout(advanceSlide, delay)
     return () => clearTimeout(timer)
   }, [currentSlide, phase, advanceSlide])

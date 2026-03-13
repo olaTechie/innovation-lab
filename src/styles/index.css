@@ -194,9 +194,9 @@ p:last-child { margin-bottom: 0; }
 
 /* Glassmorphism Card */
 .card-glass {
-  background: rgba(18, 16, 31, 0.7);
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  background: rgba(26, 34, 53, 0.7);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
   border: 1px solid rgba(123, 45, 142, 0.15);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
@@ -215,8 +215,8 @@ p:last-child { margin-bottom: 0; }
 
 /* Depth Card (3D perspective on hover) */
 .depth-card {
-  transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
-  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+  transform: perspective(1000px) rotateX(2deg) rotateY(0deg);
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease;
   will-change: transform;
   transform-style: preserve-3d;
   position: relative;

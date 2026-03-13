@@ -167,16 +167,24 @@ export function SeriesCarousel({ onContinue }: SeriesCarouselProps) {
                   {session.subtitle}
                 </p>
 
-                {/* Details */}
+                {/* Key Stats */}
                 <div style={{
                   fontSize: '0.7rem',
                   color: 'var(--color-text-muted)',
                   display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: '6px 12px',
+                  flexDirection: 'column',
+                  gap: '4px',
                 }}>
-                  <span>{session.duration}</span>
-                  <span>{session.format}</span>
+                  {session.keyStats.map((stat, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                      <span>{stat.label}</span>
+                      <span style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                        color: 'var(--color-text-secondary)',
+                      }}>{stat.value}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             )

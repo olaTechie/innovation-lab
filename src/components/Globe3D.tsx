@@ -55,7 +55,7 @@ function GlobeMesh() {
         <meshStandardMaterial
           color="#1a0a2e"
           emissive="#7B2D8E"
-          emissiveIntensity={0.04}
+          emissiveIntensity={0.05}
           roughness={0.85}
           metalness={0.1}
         />
@@ -66,7 +66,7 @@ function GlobeMesh() {
         <meshBasicMaterial
           color="#7B2D8E"
           transparent
-          opacity={0.06}
+          opacity={0.08}
           side={THREE.BackSide}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
@@ -87,7 +87,7 @@ function GlobeMesh() {
       <mesh ref={markerRef} position={asantePos}>
         <sphereGeometry args={[0.04, 16, 16]} />
         <meshBasicMaterial
-          color="#9B4DBA"
+          color="#7B2D8E"
           transparent
           opacity={0.9}
         />
