@@ -1,66 +1,33 @@
+import React, { Suspense, useState } from 'react'
 import { useGameStore } from '../store/gameStore'
+import { GlobeVisualization } from './GlobeVisualization'
+import { VideoEmbed } from './VideoEmbed'
+import { SeriesCarousel } from './SeriesCarousel'
+import { CinematicIntro } from './CinematicIntro'
+import { scenarios } from '../data/scenarios'
 
-function GlobeVisualization() {
-  return (
-    <div className="globe-container" style={{ width: 340, height: 340 }}>
-      <svg viewBox="0 0 340 340" className="globe-svg" style={{ width: 340, height: 340 }}>
-        <defs>
-          <radialGradient id="globe-grad" cx="40%" cy="35%" r="55%">
-            <stop offset="0%" stopColor="#1e3a5f" />
-            <stop offset="100%" stopColor="#0a1628" />
-          </radialGradient>
-          <radialGradient id="globe-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="70%" stopColor="transparent" />
-            <stop offset="100%" stopColor="rgba(59,130,246,0.08)" />
-          </radialGradient>
-          <filter id="blur-sm">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
-          </filter>
-        </defs>
-        {/* Glow ring */}
-        <circle cx="170" cy="170" r="162" fill="none" stroke="rgba(59,130,246,0.12)" strokeWidth="4" />
-        <circle cx="170" cy="170" r="155" fill="url(#globe-grad)" stroke="rgba(59,130,246,0.25)" strokeWidth="1.5" />
-        <circle cx="170" cy="170" r="155" fill="url(#globe-glow)" />
-        {/* Grid lines */}
-        {[30, 60, 90, 120, 150].map((angle) => {
-          const r = 155 * Math.sin((angle * Math.PI) / 180)
-          const cy = 170 - 155 * Math.cos((angle * Math.PI) / 180)
-          return <ellipse key={`lat-${angle}`} cx="170" cy={cy} rx={r} ry={r * 0.15} fill="none" stroke="rgba(59,130,246,0.08)" strokeWidth="0.5" />
-        })}
-        {[-30, 0, 30].map((angle) => (
-          <ellipse key={`lon-${angle}`} cx="170" cy="170" rx={Math.max(20, 155 * Math.cos((angle * Math.PI) / 180) * 0.3)} ry="155" fill="none" stroke="rgba(59,130,246,0.08)" strokeWidth="0.5" transform={`rotate(${angle}, 170, 170)`} />
-        ))}
-        {/* Stylized Africa/continent shapes */}
-        <g opacity="0.6">
-          {/* Africa-like shape */}
-          <path d="M 155 95 Q 148 110 150 130 Q 145 145 148 160 Q 150 175 155 185 Q 160 195 158 210 Q 155 220 160 225 Q 168 230 175 220 Q 178 210 180 195 Q 182 180 178 165 Q 175 150 180 135 Q 185 120 178 105 Q 170 95 155 95 Z" fill="#4A7C59" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />
-          {/* Europe hint */}
-          <path d="M 148 80 Q 155 75 165 78 Q 175 82 168 88 Q 160 92 150 88 Z" fill="#5B8BA0" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />
-          {/* Middle East hint */}
-          <path d="M 185 100 Q 195 95 200 105 Q 198 115 190 112 Z" fill="#C17547" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />
-        </g>
-        {/* Asante highlight - pulsing */}
-        <circle cx="162" cy="160" r="6" fill="#3b82f6" opacity="0.8">
-          <animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="162" cy="160" r="3" fill="#60a5fa" />
-        {/* Arcs showing connections */}
-        <path d="M 162 160 Q 140 120 150 85" fill="none" stroke="rgba(59,130,246,0.3)" strokeWidth="1" strokeDasharray="3,3">
-          <animate attributeName="strokeDashoffset" values="0;-6" dur="1.5s" repeatCount="indefinite" />
-        </path>
-        <path d="M 162 160 Q 195 140 200 105" fill="none" stroke="rgba(59,130,246,0.3)" strokeWidth="1" strokeDasharray="3,3">
-          <animate attributeName="strokeDashoffset" values="0;-6" dur="1.8s" repeatCount="indefinite" />
-        </path>
-        {/* Label */}
-        <text x="175" y="153" fill="white" fontSize="8" fontFamily="Inter, sans-serif" fontWeight="600" opacity="0.9">ASANTE</text>
-      </svg>
-    </div>
-  )
+// Lazy-load Globe3D for code splitting
+const Globe3D = React.lazy(() => import('./Globe3D'))
+
+// WebGL detection
+const hasWebGL = (() => {
+  try {
+    const c = document.createElement('canvas')
+    return !!(c.getContext('webgl2') || c.getContext('webgl'))
+  } catch {
+    return false
+  }
+})()
+
+const scenarioVideoIds: Record<number, string> = {
+  0: 'PLACEHOLDER_SCENARIO_1',
+  1: 'PLACEHOLDER_SCENARIO_2',
+  2: 'PLACEHOLDER_SCENARIO_3',
 }
 
 export function Landing() {
   const { setPhase, startGame, resetGame, phase, role } = useGameStore()
+  const [introPhase, setIntroPhase] = useState<'carousel' | 'cinematic' | 'hero'>('carousel')
 
   const hasSavedGame = phase !== 'landing' && role !== null
 
@@ -74,28 +41,93 @@ export function Landing() {
     // Just close landing, continue from saved state
   }
 
+  // Phase 1: Series Carousel
+  if (introPhase === 'carousel') {
+    return <SeriesCarousel onContinue={() => setIntroPhase('cinematic')} />
+  }
+
+  // Phase 2: Cinematic Stats
+  if (introPhase === 'cinematic') {
+    return <CinematicIntro onComplete={() => setIntroPhase('hero')} />
+  }
+
+  // Phase 3: Hero with video + globe + CTA
   return (
     <div style={{
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 'var(--space-xl)',
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Background gradient */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'radial-gradient(ellipse at 50% 30%, rgba(59,130,246,0.08) 0%, transparent 60%)',
-        pointerEvents: 'none',
-      }} />
+      {/* Parallax background */}
+      <div className="parallax-bg">
+        <div className="parallax-bg__stars" />
+        <div className="parallax-bg__nebula-top" />
+        <div className="parallax-bg__nebula-bottom" />
+        <div className="parallax-bg__vignette" />
+      </div>
 
-      <div className="animate-fade-in-up" style={{ textAlign: 'center', maxWidth: 600, position: 'relative', zIndex: 1 }}>
-        {/* Subtitle */}
+      {/* Warwick header bar */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '10px var(--space-lg)',
+        borderBottom: '1px solid var(--color-border)',
+        background: 'rgba(18, 16, 31, 0.8)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        position: 'relative',
+        zIndex: 10,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+          {/* Placeholder crest: purple "W" square */}
+          <div style={{
+            width: 32,
+            height: 32,
+            borderRadius: 4,
+            background: '#7B2D8E',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 900,
+            fontSize: '0.85rem',
+            color: 'white',
+            flexShrink: 0,
+          }}>
+            W
+          </div>
+          <span style={{
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            color: 'var(--color-text)',
+          }}>
+            Warwick Medical School
+          </span>
+        </div>
         <div style={{
+          fontSize: '0.75rem',
+          color: 'var(--color-text-muted)',
+          fontFamily: 'var(--font-mono)',
+        }}>
+          IM93Q / IM9M1
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 'var(--space-xl)',
+        position: 'relative',
+        zIndex: 1,
+      }}>
+        {/* Subtitle badge */}
+        <div className="animate-fade-in-up" style={{
           display: 'inline-flex',
           alignItems: 'center',
           gap: 8,
@@ -112,12 +144,14 @@ export function Landing() {
           Session 3 &middot; Emerging Innovations in Global Health
         </div>
 
-        <h1 style={{
-          fontSize: '3rem',
+        {/* Title */}
+        <h1 className="animate-fade-in-up" style={{
+          fontSize: 'clamp(2rem, 5vw, 3rem)',
           fontWeight: 900,
           lineHeight: 1.1,
           marginBottom: 'var(--space-md)',
-          background: 'linear-gradient(135deg, #e8ecf4 0%, #3b82f6 50%, #818cf8 100%)',
+          textAlign: 'center',
+          background: 'linear-gradient(135deg, #ede8f5 0%, #7B2D8E 50%, #4472C4 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
@@ -125,18 +159,57 @@ export function Landing() {
           Innovation Lab:<br />Mission Control
         </h1>
 
-        <p style={{
+        <p className="animate-fade-in-up" style={{
           fontSize: '1.15rem',
           color: 'var(--color-text-secondary)',
           marginBottom: 'var(--space-2xl)',
           lineHeight: 1.7,
+          textAlign: 'center',
+          maxWidth: 600,
         }}>
           You are the decision-maker. Deploy health innovations, allocate resources, and navigate three critical scenarios in the fictional nation of <strong style={{ color: 'var(--color-text)' }}>Asante</strong>. Every choice has consequences.
         </p>
 
-        <GlobeVisualization />
+        {/* Split layout: Video (left) + Globe (right) */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 'var(--space-xl)',
+          maxWidth: 1000,
+          width: '100%',
+          marginBottom: 'var(--space-2xl)',
+        }}>
+          {/* Video embed */}
+          <div>
+            <VideoEmbed
+              videoId="PLACEHOLDER_SERIES_OVERVIEW"
+              title="Series Overview: Innovation Lab"
+            />
+          </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', alignItems: 'center', marginTop: 'var(--space-2xl)' }}>
+          {/* Globe */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            {hasWebGL ? (
+              <Suspense fallback={<GlobeVisualization />}>
+                <Globe3D />
+              </Suspense>
+            ) : (
+              <GlobeVisualization />
+            )}
+          </div>
+        </div>
+
+        {/* CTA buttons */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--space-md)',
+          alignItems: 'center',
+        }}>
           <button className="btn btn-primary btn-lg" onClick={handleStart} style={{ minWidth: 240 }}>
             Begin Mission
           </button>
@@ -148,6 +221,7 @@ export function Landing() {
           )}
         </div>
 
+        {/* Quick stats */}
         <div style={{
           marginTop: 'var(--space-2xl)',
           display: 'flex',
@@ -165,14 +239,84 @@ export function Landing() {
           <span>20 innovations</span>
         </div>
 
+        {/* Scenario preview strip */}
+        <div style={{
+          marginTop: 'var(--space-2xl)',
+          display: 'flex',
+          gap: 'var(--space-md)',
+          maxWidth: 800,
+          width: '100%',
+        }}>
+          {scenarios.map((scenario, idx) => (
+            <div
+              key={scenario.id}
+              className="card-glass"
+              style={{
+                flex: 1,
+                padding: 'var(--space-md)',
+                cursor: 'default',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                <div style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: '50%',
+                  background: 'rgba(123, 45, 142, 0.15)',
+                  border: '1px solid rgba(123, 45, 142, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 5v14l11-7L8 5z" fill="var(--color-accent)" />
+                  </svg>
+                </div>
+                <span style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.65rem',
+                  color: 'var(--color-text-muted)',
+                }}>
+                  SCENARIO {idx + 1}
+                </span>
+              </div>
+              <div style={{
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                color: 'var(--color-text)',
+                marginBottom: 2,
+              }}>
+                {scenario.title}
+              </div>
+              <div style={{
+                fontSize: '0.7rem',
+                color: 'var(--color-text-muted)',
+              }}>
+                {scenario.region}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
         <div style={{
           marginTop: 'var(--space-xl)',
           fontSize: '0.7rem',
           color: 'var(--color-text-muted)',
         }}>
-          Warwick Medical School &middot; Global Health MD999 & ES99B
+          Warwick Medical School &middot; IM93Q / IM9M1
         </div>
       </div>
+
+      {/* Responsive styles */}
+      <style>{`
+        @media (max-width: 768px) {
+          div[style*="grid-template-columns: 1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }

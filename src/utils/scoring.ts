@@ -141,7 +141,7 @@ export function generateRoleComparison(
     .map((r) => ({
       role: r.id,
       title: r.title,
-      likelyScore: getRoleWeightedScore(scores, r.id) + Math.round((Math.random() - 0.5) * 10),
+      likelyScore: getRoleWeightedScore(scores, r.id),
       keyDifference: differences[r.id],
     }))
 }
@@ -156,7 +156,7 @@ export const scoreLabels: Record<keyof Scores, string> = {
 }
 
 export const scoreColors: Record<keyof Scores, string> = {
-  coverage: '#3b82f6',
+  coverage: '#4472C4',
   equity: '#8b5cf6',
   costEffectiveness: '#10b981',
   sustainability: '#f59e0b',

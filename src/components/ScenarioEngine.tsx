@@ -3,7 +3,14 @@ import { useGameStore } from '../store/gameStore'
 import { scenarios } from '../data/scenarios'
 import { roles } from '../data/roles'
 import { Dashboard } from './Dashboard'
+import { ScenarioIntro } from './ScenarioIntro'
 import type { Scores, ScenarioChoice, GamePhase } from '../types'
+
+const scenarioVideoIds: Record<number, string> = {
+  0: 'PLACEHOLDER_SCENARIO_1',
+  1: 'PLACEHOLDER_SCENARIO_2',
+  2: 'PLACEHOLDER_SCENARIO_3',
+}
 
 export function ScenarioEngine() {
   const {
@@ -22,6 +29,7 @@ export function ScenarioEngine() {
   const [preDecisionScores] = useState<Scores>({ ...scores })
   const [narrativeRevealed, setNarrativeRevealed] = useState(false)
   const [showBriefing, setShowBriefing] = useState(decisionPointIndex === 0)
+  const [showVideoIntro, setShowVideoIntro] = useState(decisionPointIndex === 0)
 
   const scenario = scenarios[scenarioIndex]
   const decisionPoint = scenario?.decisionPoints[decisionPointIndex]
@@ -76,6 +84,17 @@ export function ScenarioEngine() {
 
   if (!scenario || !decisionPoint || !currentRole) {
     return <div style={{ padding: 'var(--space-xl)', textAlign: 'center' }}>Loading scenario...</div>
+  }
+
+  // Video intro screen (before briefing, first decision point only)
+  if (showVideoIntro && showBriefing) {
+    return (
+      <ScenarioIntro
+        scenario={scenario}
+        videoId={scenarioVideoIds[scenarioIndex] || 'PLACEHOLDER_SCENARIO_1'}
+        onContinue={() => setShowVideoIntro(false)}
+      />
+    )
   }
 
   // Scenario briefing screen

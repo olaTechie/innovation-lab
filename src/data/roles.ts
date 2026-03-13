@@ -55,7 +55,7 @@ export const roles: Role[] = [
     shortTitle: 'Tech',
     icon: '\u{1F4F1}',
     color: '#9333ea',
-    description: 'You believe technology can leapfrog traditional barriers to healthcare access. Your challenge is proving that innovation can scale sustainably in low-resource settings while maintaining quality.',
+    description: 'You believe technology can leapfrog traditional barriers to healthcare access, but you know from experience that the best health technologies are those designed with communities, not for them. Your challenge is proving that innovation can scale sustainably in low-resource settings while maintaining quality.',
     priorities: [
       'Innovation adoption and scalability',
       'Return on technology investment',
@@ -63,7 +63,7 @@ export const roles: Role[] = [
       'Data-driven decision making',
     ],
     metrics: ['Coverage Rate', 'Cost-Effectiveness', 'Sustainability'],
-    uniqueInfo: 'Mobile phone penetration in Asante is 72% but smartphone adoption is only 31%. Any digital health solution must work on basic feature phones to reach the majority. Internet connectivity drops below 15% in rural areas.',
+    uniqueInfo: 'Mobile phone penetration in Asante is 72% but smartphone adoption is only 31% (and only 18% among women). Any digital health solution must work on basic feature phones to reach the majority. Internet connectivity drops below 15% in rural areas. The gender digital divide means any digital health solution that requires smartphones will miss half the population.',
   },
   {
     id: 'who_advisor',

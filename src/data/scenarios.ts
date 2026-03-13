@@ -7,9 +7,9 @@ export const scenarios: Scenario[] = [
     subtitle: 'Maternal & Newborn Health in the Highlands',
     region: 'Kibo Highlands',
     setting: 'Remote mountainous region with 2.1 million people scattered across villages connected by unpaved roads. Average travel time to nearest hospital: 3 hours. Strong traditional birth attendant culture. Rainy season makes many roads impassable for 4 months each year.',
-    backgroundNarrative: `In the Kibo Highlands of Asante, a crisis unfolds in silence. Last year, 847 mothers died during or shortly after childbirth — a rate of 612 per 100,000 live births, nearly 5 times the national average. Most deaths occur at home or on the journey to a facility, from postpartum hemorrhage, eclampsia, or obstructed labor.
+    backgroundNarrative: `In the Kibo Highlands of Asante, a crisis unfolds in silence. Last year, approximately 450 mothers died during or shortly after childbirth — a rate of 612 per 100,000 live births, nearly 5 times the national average of 350. Most deaths occur at home or on the journey to a facility, from postpartum hemorrhage, eclampsia, or obstructed labor.
 
-The highland communities have deep trust in traditional birth attendants (TBAs), who attend 60% of births. Many women fear the district hospital, where staff shortages mean long waits and impersonal care. The few community health workers in the region are stretched thin, covering 15-20 villages each.
+The highland communities have deep trust in traditional birth attendants (TBAs), who attend 60% of births. Many women fear the district hospital, where staff shortages mean long waits and impersonal care. The few community health workers in the region are stretched thin, each responsible for 15-20 villages and up to 1,000 households.
 
 A new regional health coordinator has been appointed, and resources are being mobilized. But the question isn't just what to deploy — it's how to deploy it in a way that communities will accept and that can survive beyond the initial funding cycle.
 
@@ -17,7 +17,7 @@ You have been called to advise on the strategy. The lives of mothers and newborn
     keyStats: [
       { label: 'Maternal Mortality Rate', value: '612 per 100,000', trend: 'up' },
       { label: 'Facility Birth Rate', value: '40%', trend: 'stable' },
-      { label: 'Health Worker Coverage', value: '0.3 per 10,000', trend: 'down' },
+      { label: 'Midwife Coverage', value: '0.3 per 10,000', trend: 'down' },
       { label: 'Emergency Referral Success', value: '23%', trend: 'down' },
       { label: 'TBA-Attended Births', value: '60%', trend: 'up' },
       { label: 'Neonatal Mortality', value: '32 per 1,000', trend: 'stable' },
@@ -131,7 +131,7 @@ You have been called to advise on the strategy. The lives of mothers and newborn
     setting: 'The capital city of Asante, population 3.8 million. Dense informal settlements house 40% of the urban population. Two major referral hospitals are overwhelmed. TB case notifications are rising but an estimated 1 in 4 cases goes undetected. A dengue outbreak is escalating in the informal settlements.',
     backgroundNarrative: `Lumasa Metro, Asante's capital, is a city of contrasts. Glass towers rise above sprawling informal settlements where 1.5 million people live in overcrowded conditions with intermittent water supply. The city's two referral hospitals — built for a population of 1 million — now serve nearly 4 million.
 
-TB has been quietly spreading through the informal settlements, fueled by overcrowding, poor ventilation, and limited access to diagnosis. Last year, 809 cases were notified — but epidemiological models suggest the true number is over 1,100. Worse, drug-resistant TB (MDR-TB) has been detected in 8% of new cases, triple the national average.
+TB has been quietly spreading through the informal settlements, fueled by overcrowding, poor ventilation, and limited access to diagnosis. Last year, 7,600 cases were notified — but epidemiological models suggest the true number exceeds 10,400. Worse, drug-resistant TB (MDR-TB) has been detected in 8% of new cases, nearly three times the national average of 2.8%.
 
 Simultaneously, an unusual dengue outbreak is growing. Climate change has extended the mosquito breeding season by 6 weeks, and the recent expansion of standing water in construction sites has created new breeding grounds. Cases have doubled in the past month, and the city's surveillance system can barely keep up.
 
@@ -193,7 +193,7 @@ The mayor has declared a dual health emergency. Resources are limited. Every dec
         id: 'it_dp2',
         title: 'Stigma and Adherence',
         prompt: 'TB treatment takes 6 months. Stigma causes patients to hide their diagnosis and abandon treatment. How do you tackle adherence?',
-        context: 'Treatment completion rate is only 61%. Patients who stop treatment early drive drug resistance. Community stigma is the primary barrier.',
+        context: 'Treatment completion rate is only 61% — far below the WHO target of 90% and the global average of 88% for drug-susceptible TB. Patients who stop treatment early drive drug resistance. Community stigma is the primary barrier.',
         roleSpecificContext: {
           health_minister: 'Each MDR-TB case costs 100x more to treat than regular TB. Low adherence is creating a fiscal time bomb.',
           ngo_director: 'Community health programs have the best track record on adherence, but they require sustained investment in human relationships.',
@@ -246,7 +246,7 @@ Third, the host community backlash. Local villages around the camp feel that int
 You must plan for the next 5 years, not the next 5 months. Quick fixes won't work here. The question is: how do you build a health system that serves both refugees and host communities, adapts to climate change, and can sustain itself as international attention inevitably fades?`,
     keyStats: [
       { label: 'Refugee Population', value: '180,000', trend: 'up' },
-      { label: 'NCD Prevalence (camp)', value: '18% of adults', trend: 'up' },
+      { label: 'NCD Prevalence (camp)', value: '24% of adults', trend: 'up' },
       { label: 'Mental Health Gap', value: '94% unserved', trend: 'stable' },
       { label: 'Climate Displacement', value: '34,000 this year', trend: 'up' },
       { label: 'Host-Refugee Tension', value: 'High (incidents rising)', trend: 'up' },

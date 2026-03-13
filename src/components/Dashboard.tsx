@@ -116,7 +116,7 @@ export function RadarChart({ scores, comparisonScores, size = 280 }: RadarChartP
         {/* Score polygon */}
         <polygon
           points={polygon}
-          fill="rgba(59,130,246,0.15)"
+          fill="rgba(123,45,142,0.15)"
           stroke="var(--color-accent)"
           strokeWidth="2"
           className="radar-polygon"
