@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { roles } from '../data/roles'
 import { scenarios } from '../data/scenarios'
 import { innovations } from '../data/innovations'
 import { RadarChart, ScoreSummary } from './Dashboard'
 import { JournalViewer, downloadJournal } from './ReflectionJournal'
+import { AchievementWall } from './AchievementWall'
+import { ShareCard } from './ShareCard'
+import { hiddenObjectives } from '../data/hiddenObjectives'
 import {
   getOverallScore,
   getRoleWeightedScore,
@@ -15,8 +18,13 @@ import {
 import type { Scores } from '../types'
 
 export function Debrief() {
-  const { scores, role, decisions, deployedInnovations, journalEntries, setPhase } = useGameStore()
-  const [activeTab, setActiveTab] = useState<'overview' | 'comparison' | 'journal' | 'decisions'>('overview')
+  const { scores, role, decisions, deployedInnovations, journalEntries, setPhase, hiddenObjectiveStatus, checkUnlocks, updateObjectiveStatus } = useGameStore()
+  const [activeTab, setActiveTab] = useState<'overview' | 'achievements' | 'comparison' | 'journal' | 'decisions'>('overview')
+
+  useEffect(() => {
+    updateObjectiveStatus()
+    checkUnlocks()
+  }, [updateObjectiveStatus, checkUnlocks])
 
   const currentRole = roles.find((r) => r.id === role)
   const overallScore = getOverallScore(scores)
@@ -43,6 +51,7 @@ export function Debrief() {
 
   const tabs = [
     { id: 'overview', label: 'Scorecard' },
+    { id: 'achievements', label: 'Achievements' },
     { id: 'comparison', label: 'Role Comparison' },
     { id: 'decisions', label: 'Decision History' },
     { id: 'journal', label: 'Reflection Journal' },
@@ -100,6 +109,10 @@ export function Debrief() {
               {roleGrade.label}
             </div>
           </div>
+        </div>
+
+        <div style={{ textAlign: 'center', marginBottom: 'var(--space-xl)' }}>
+          <ShareCard />
         </div>
 
         {/* Tabs */}
@@ -184,6 +197,32 @@ export function Debrief() {
                 </div>
               ))}
             </div>
+
+            {/* Hidden Objectives */}
+            <div>
+              <h4 style={{ marginBottom: 'var(--space-md)' }}>Secret Objectives</h4>
+              {hiddenObjectiveStatus.map((obj) => {
+                const objDef = hiddenObjectives.find((o) => o.id === obj.id)
+                return (
+                  <div key={obj.id} className="card" style={{
+                    marginBottom: 'var(--space-sm)',
+                    borderLeft: `3px solid ${obj.completed ? 'var(--color-success)' : 'var(--color-danger)'}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--space-md)',
+                  }}>
+                    <span style={{ fontSize: '1.2rem' }}>{obj.completed ? '✅' : '❌'}</span>
+                    <span className="text-sm">{objDef?.description || obj.id}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'achievements' && (
+          <div className="animate-fade-in">
+            <AchievementWall />
           </div>
         )}
 
