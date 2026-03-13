@@ -81,6 +81,7 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
       {/* Stat content */}
       <div
         key={`stat-${currentSlide}`}
+        aria-live="polite"
         style={{
           textAlign: 'center',
           maxWidth: 700,

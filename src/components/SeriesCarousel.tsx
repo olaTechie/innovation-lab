@@ -100,7 +100,7 @@ export function SeriesCarousel({ onContinue }: SeriesCarouselProps) {
         </div>
 
         {/* Cards */}
-        <div style={{
+        <div className="session-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
           gap: 'var(--space-md)',
@@ -115,6 +115,10 @@ export function SeriesCarousel({ onContinue }: SeriesCarouselProps) {
               <div
                 key={session.id}
                 onClick={() => setActiveIndex(idx)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveIndex(idx) } }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Session ${session.id}: ${session.title}`}
                 className="card-glass"
                 style={{
                   cursor: 'pointer',
@@ -202,6 +206,7 @@ export function SeriesCarousel({ onContinue }: SeriesCarouselProps) {
             <button
               key={idx}
               onClick={() => setActiveIndex(idx)}
+              aria-label={`Go to session ${idx + 1}`}
               style={{
                 width: idx === activeIndex ? 24 : 8,
                 height: 8,
@@ -240,14 +245,6 @@ export function SeriesCarousel({ onContinue }: SeriesCarouselProps) {
         </div>
       </div>
 
-      {/* Responsive: stack on mobile */}
-      <style>{`
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns: repeat(4"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   )
 }

@@ -19,12 +19,6 @@ const hasWebGL = (() => {
   }
 })()
 
-const scenarioVideoIds: Record<number, string> = {
-  0: 'PLACEHOLDER_SCENARIO_1',
-  1: 'PLACEHOLDER_SCENARIO_2',
-  2: 'PLACEHOLDER_SCENARIO_3',
-}
-
 export function Landing() {
   const { setPhase, startGame, resetGame, phase, role } = useGameStore()
   const [introPhase, setIntroPhase] = useState<'carousel' | 'cinematic' | 'hero'>('carousel')
@@ -38,7 +32,8 @@ export function Landing() {
   }
 
   const handleResume = () => {
-    // Just close landing, continue from saved state
+    // Re-emit the stored phase so App.tsx renders the correct component
+    setPhase(phase)
   }
 
   // Phase 1: Series Carousel
@@ -171,7 +166,7 @@ export function Landing() {
         </p>
 
         {/* Split layout: Video (left) + Globe (right) */}
-        <div style={{
+        <div className="hero-grid" style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           gap: 'var(--space-xl)',
@@ -309,14 +304,6 @@ export function Landing() {
         </div>
       </div>
 
-      {/* Responsive styles */}
-      <style>{`
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns: 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   )
 }

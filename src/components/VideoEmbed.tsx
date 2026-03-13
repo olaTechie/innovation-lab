@@ -85,6 +85,7 @@ export function VideoEmbed({ videoId, title = 'Video', aspectRatio = '16/9' }: V
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
+          sandbox="allow-scripts allow-same-origin allow-presentation"
           style={{
             position: 'absolute',
             top: 0,
@@ -102,6 +103,10 @@ export function VideoEmbed({ videoId, title = 'Video', aspectRatio = '16/9' }: V
   return (
     <div
       onClick={() => setPlaying(true)}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPlaying(true) } }}
+      role="button"
+      tabIndex={0}
+      aria-label="Play video"
       style={{
         position: 'relative',
         width: '100%',
