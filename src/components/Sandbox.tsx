@@ -1,14 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { roles } from '../data/roles'
 import { innovations, innovationCategories } from '../data/innovations'
+import { unlockables } from '../data/unlockables'
 import { RadarChart, Dashboard } from './Dashboard'
 import { scoreLabels, getOverallScore, getScoreGrade } from '../utils/scoring'
 import type { Scores, InnovationCategory } from '../types'
 
 export function Sandbox() {
-  const { scores: originalScores, role, deployedInnovations, setPhase, resetGame } = useGameStore()
+  const { scores: originalScores, role, deployedInnovations, setPhase, resetGame, unlockedContent, setSandboxEntryTime } = useGameStore()
   const currentRole = roles.find((r) => r.id === role)
+
+  useEffect(() => {
+    setSandboxEntryTime()
+  }, [setSandboxEntryTime])
 
   const [sandboxScores, setSandboxScores] = useState<Scores>({ ...originalScores })
   const [sandboxInnovations, setSandboxInnovations] = useState<Set<string>>(
@@ -194,6 +199,38 @@ export function Sandbox() {
                         <span className="text-xs text-muted">
                           {isActive ? 'Deployed' : 'Click to deploy'}
                         </span>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Unlockable Content */}
+            <div className="card">
+              <h4 style={{ marginBottom: 'var(--space-md)' }}>Bonus Content</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+                {unlockables.map((unlock) => {
+                  const isUnlocked = unlockedContent.includes(unlock.id)
+                  return (
+                    <div
+                      key={unlock.id}
+                      style={{
+                        padding: '12px',
+                        background: isUnlocked ? 'rgba(123, 45, 142, 0.06)' : 'var(--color-bg-input)',
+                        border: `1px solid ${isUnlocked ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                        borderRadius: 'var(--radius-sm)',
+                        opacity: isUnlocked ? 1 : 0.5,
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+                        <span style={{ fontSize: '1.2rem' }}>{isUnlocked ? unlock.icon : '🔒'}</span>
+                        <div>
+                          <div className="text-sm font-semibold">{isUnlocked ? unlock.title : 'Locked'}</div>
+                          <div className="text-xs text-muted">
+                            {isUnlocked ? unlock.description : 'Unlock condition not met'}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )
