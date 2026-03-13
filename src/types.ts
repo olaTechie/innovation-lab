@@ -71,12 +71,16 @@ export interface Scores {
 export type GamePhase =
   | 'landing'
   | 'role_selection'
+  | 'hidden_objectives'
   | 'country_briefing'
   | 'scenario_1'
+  | 'mission_report_1'
   | 'innovation_assembly_1'
   | 'scenario_2'
+  | 'mission_report_2'
   | 'innovation_assembly_2'
   | 'scenario_3'
+  | 'mission_report_3'
   | 'innovation_assembly_3'
   | 'debrief'
   | 'sandbox'
@@ -105,6 +109,91 @@ export interface DecisionRecord {
 export interface DeployedInnovation {
   innovationId: string
   scenarioPhase: number
+}
+
+// --- Gamification Types ---
+
+export type AchievementCategory = 'role-mastery' | 'innovation-strategy' | 'decision-making' | 'engagement' | 'hidden'
+
+export interface Achievement {
+  id: string
+  title: string
+  description: string
+  category: AchievementCategory
+  xpReward: number
+  badgeImage: string
+  badgeEmoji: string
+  condition: (state: GameStateSnapshot) => boolean
+  hint: string
+}
+
+export interface CrisisEvent {
+  id: string
+  scenarioIndex: number
+  title: string
+  description: string
+  crisisArt: string
+  crisisEmoji: string
+  immediateEffects: Partial<Scores>
+  triggerCondition: 'guaranteed' | ((state: GameStateSnapshot) => boolean)
+  responses: CrisisResponseOption[]
+  narrativeFlash: string
+}
+
+export interface CrisisResponseOption {
+  id: string
+  title: string
+  description: string
+  effects: Partial<Scores>
+  narrativeFlash: string
+}
+
+export interface CrisisResponseRecord {
+  crisisId: string
+  choiceId: string
+  scenarioIndex: number
+  timestamp: number
+}
+
+export interface HiddenObjective {
+  id: string
+  roleId: RoleId
+  description: string
+  condition: (state: GameStateSnapshot) => boolean
+}
+
+export interface ObjectiveStatus {
+  id: string
+  completed: boolean
+}
+
+export interface Unlockable {
+  id: string
+  title: string
+  description: string
+  icon: string
+  unlockCondition: (state: GameStateSnapshot) => boolean
+}
+
+export interface XPLevel {
+  level: number
+  title: string
+  threshold: number
+}
+
+// Snapshot of state passed to condition functions (avoids circular dep with store)
+export interface GameStateSnapshot {
+  scores: Scores
+  role: RoleId | null
+  decisions: DecisionRecord[]
+  deployedInnovations: DeployedInnovation[]
+  journalEntries: JournalEntry[]
+  achievements: string[]
+  crisisHistory: CrisisResponseRecord[]
+  xp: number
+  scenarioIndex: number
+  innovationBudgetUsed: number
+  innovationBudgetTotal: number
 }
 
 export interface CountryData {
