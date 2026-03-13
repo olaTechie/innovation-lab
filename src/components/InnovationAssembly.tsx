@@ -16,6 +16,8 @@ export function InnovationAssembly() {
     updateScores,
     setPhase,
     advanceScenario,
+    addXP,
+    checkAchievements,
   } = useGameStore()
 
   const [selectedCategory, setSelectedCategory] = useState<InnovationCategory | 'all'>('all')
@@ -63,9 +65,11 @@ export function InnovationAssembly() {
         Object.entries(innovation.effects).map(([k, v]) => [k, Math.round((v as number) * 0.5)])
       ) as Partial<Scores>
     )
+    addXP(15)
+    checkAchievements()
     setDraggedId(null)
     setIsDragOver(false)
-  }, [budgetUsed, budgetTotal, deployedIds, scenarioIndex, deployInnovation, updateScores])
+  }, [budgetUsed, budgetTotal, deployedIds, scenarioIndex, deployInnovation, updateScores, addXP, checkAchievements])
 
   const handleRemove = (innovationId: string) => {
     const innovation = innovations.find((i) => i.id === innovationId)

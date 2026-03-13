@@ -1,4 +1,5 @@
 // src/components/MissionReport.tsx
+import { useEffect } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { scenarios } from '../data/scenarios'
 import { roles } from '../data/roles'
@@ -6,7 +7,13 @@ import { getRoleWeightedScore, getScoreGrade, scoreLabels, scoreColors } from '.
 import type { Scores, GamePhase } from '../types'
 
 export function MissionReport() {
-  const { scores, role, decisions, crisisHistory, scenarioIndex, setPhase } = useGameStore()
+  const { scores, role, decisions, crisisHistory, scenarioIndex, setPhase, addXP, checkAchievements, updateObjectiveStatus } = useGameStore()
+
+  useEffect(() => {
+    addXP(100)
+    checkAchievements()
+    updateObjectiveStatus()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const scenario = scenarios[scenarioIndex]
   const currentRole = roles.find((r) => r.id === role)
 
