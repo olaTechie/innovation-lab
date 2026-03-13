@@ -6,6 +6,11 @@ import { ScenarioEngine } from './components/ScenarioEngine'
 import { InnovationAssembly } from './components/InnovationAssembly'
 import { Debrief } from './components/Debrief'
 import { Sandbox } from './components/Sandbox'
+import { XPProgressBar } from './components/XPProgressBar'
+import { AchievementToast } from './components/AchievementToast'
+import { StreakIndicator } from './components/StreakIndicator'
+import { HiddenObjectives } from './components/HiddenObjectives'
+import { MissionReport } from './components/MissionReport'
 
 function ScenarioWrapper() {
   const { scenarioIndex, decisionPointIndex } = useGameStore()
@@ -22,6 +27,8 @@ export default function App() {
         return <Landing />
       case 'role_selection':
         return <RoleSelection />
+      case 'hidden_objectives':
+        return <HiddenObjectives />
       case 'country_briefing':
         return <CountryBriefing />
       case 'scenario_1':
@@ -32,6 +39,10 @@ export default function App() {
       case 'innovation_assembly_2':
       case 'innovation_assembly_3':
         return <InnovationAssembly />
+      case 'mission_report_1':
+      case 'mission_report_2':
+      case 'mission_report_3':
+        return <MissionReport />
       case 'debrief':
         return <Debrief />
       case 'sandbox':
@@ -41,9 +52,14 @@ export default function App() {
     }
   }
 
+  const showXPBar = !['landing', 'role_selection'].includes(phase)
+
   return (
     <div style={{ minHeight: '100vh' }}>
+      {showXPBar && <XPProgressBar />}
       {renderPhase()}
+      <AchievementToast />
+      <StreakIndicator />
     </div>
   )
 }

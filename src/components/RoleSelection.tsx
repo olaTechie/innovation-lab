@@ -18,7 +18,7 @@ export function RoleSelection() {
   const handleConfirm = () => {
     if (selectedId) {
       selectRole(selectedId)
-      setPhase('country_briefing')
+      setPhase('hidden_objectives')
     }
   }
 
