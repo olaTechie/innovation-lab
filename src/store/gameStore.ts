@@ -8,7 +8,27 @@ import type {
   JournalEntry,
   DecisionRecord,
   DeployedInnovation,
+  CrisisResponseRecord,
+  ObjectiveStatus,
+  GameStateSnapshot,
 } from '../types'
+import { achievements } from '../data/achievements'
+import { hiddenObjectives } from '../data/hiddenObjectives'
+import { unlockables } from '../data/unlockables'
+
+const XP_LEVELS = [
+  { level: 1, title: 'Field Observer', threshold: 0 },
+  { level: 2, title: 'Health Strategist', threshold: 500 },
+  { level: 3, title: 'Policy Architect', threshold: 1500 },
+  { level: 4, title: 'Global Health Leader', threshold: 3000 },
+]
+
+function getLevelFromXP(xp: number): number {
+  for (let i = XP_LEVELS.length - 1; i >= 0; i--) {
+    if (xp >= XP_LEVELS[i].threshold) return XP_LEVELS[i].level
+  }
+  return 1
+}
 
 interface GameState {
   phase: GamePhase
@@ -26,6 +46,20 @@ interface GameState {
   startTime: number | null
   sandboxScores: Scores | null
 
+  // Gamification state
+  xp: number
+  achievements: string[]
+  pendingToasts: { id: string; title: string; emoji: string; xp: number }[]
+  hiddenObjectiveStatus: ObjectiveStatus[]
+  crisisHistory: CrisisResponseRecord[]
+  streakMetric: string | null
+  streakCount: number
+  unlockedContent: string[]
+  sandboxEntryTime: number | null
+  viewedIntelCount: number
+  boldMoveTriggered: boolean
+  communityStreakTriggered: boolean
+
   // Actions
   setPhase: (phase: GamePhase) => void
   selectRole: (role: RoleId) => void
@@ -42,6 +76,21 @@ interface GameState {
   setSandboxScores: (scores: Scores) => void
   resetGame: () => void
   startGame: () => void
+
+  // Gamification actions
+  addXP: (amount: number) => void
+  unlockAchievement: (id: string) => void
+  dismissToast: (id: string) => void
+  recordCrisisResponse: (crisisId: string, choiceId: string, scenarioIndex: number) => void
+  updateStreak: (dominantMetric: string | null) => void
+  checkAchievements: () => void
+  checkUnlocks: () => void
+  initializeObjectives: (roleId: string) => void
+  updateObjectiveStatus: () => void
+  setSandboxEntryTime: () => void
+  incrementIntelViews: () => void
+  triggerBoldMove: () => void
+  getStateSnapshot: () => GameStateSnapshot
 }
 
 const initialScores: Scores = {
@@ -77,6 +126,20 @@ export const useGameStore = create<GameState>()(
       innovationBudgetTotal: 30,
       startTime: null,
       sandboxScores: null,
+
+      // Gamification defaults
+      xp: 0,
+      achievements: [],
+      pendingToasts: [],
+      hiddenObjectiveStatus: [],
+      crisisHistory: [],
+      streakMetric: null,
+      streakCount: 0,
+      unlockedContent: [],
+      sandboxEntryTime: null,
+      viewedIntelCount: 0,
+      boldMoveTriggered: false,
+      communityStreakTriggered: false,
 
       setPhase: (phase) => set({ phase }),
 
@@ -157,9 +220,140 @@ export const useGameStore = create<GameState>()(
           innovationBudgetUsed: 0,
           startTime: null,
           sandboxScores: null,
+          xp: 0,
+          achievements: [],
+          pendingToasts: [],
+          hiddenObjectiveStatus: [],
+          crisisHistory: [],
+          streakMetric: null,
+          streakCount: 0,
+          unlockedContent: [],
+          sandboxEntryTime: null,
+          viewedIntelCount: 0,
+          boldMoveTriggered: false,
+          communityStreakTriggered: false,
         }),
 
       startGame: () => set({ startTime: Date.now() }),
+
+      // Gamification actions
+
+      getStateSnapshot: () => {
+        const s = get()
+        return {
+          scores: s.scores,
+          role: s.role,
+          decisions: s.decisions,
+          deployedInnovations: s.deployedInnovations,
+          journalEntries: s.journalEntries,
+          achievements: s.achievements,
+          crisisHistory: s.crisisHistory,
+          xp: s.xp,
+          scenarioIndex: s.scenarioIndex,
+          innovationBudgetUsed: s.innovationBudgetUsed,
+          innovationBudgetTotal: s.innovationBudgetTotal,
+        }
+      },
+
+      addXP: (amount) => set((state) => ({ xp: state.xp + amount })),
+
+      unlockAchievement: (id) => set((state) => {
+        if (state.achievements.includes(id)) return {}
+        const achievement = achievements.find((a) => a.id === id)
+        if (!achievement) return {}
+        return {
+          achievements: [...state.achievements, id],
+          xp: state.xp + achievement.xpReward,
+          pendingToasts: [...state.pendingToasts, {
+            id: achievement.id,
+            title: achievement.title,
+            emoji: achievement.badgeEmoji,
+            xp: achievement.xpReward,
+          }],
+        }
+      }),
+
+      dismissToast: (id) => set((state) => ({
+        pendingToasts: state.pendingToasts.filter((t) => t.id !== id),
+      })),
+
+      recordCrisisResponse: (crisisId, choiceId, scenarioIndex) => set((state) => ({
+        crisisHistory: [...state.crisisHistory, { crisisId, choiceId, scenarioIndex, timestamp: Date.now() }],
+      })),
+
+      updateStreak: (dominantMetric) => set((state) => {
+        if (!dominantMetric) return { streakMetric: null, streakCount: 0 }
+        if (dominantMetric === state.streakMetric) {
+          const newCount = state.streakCount + 1
+          return {
+            streakCount: newCount,
+            ...(dominantMetric === 'communityTrust' && newCount >= 3 && !state.communityStreakTriggered
+              ? { communityStreakTriggered: true } : {}),
+          }
+        }
+        return { streakMetric: dominantMetric, streakCount: 1 }
+      }),
+
+      checkAchievements: () => {
+        const state = get()
+        const snapshot = state.getStateSnapshot()
+        for (const achievement of achievements) {
+          if (state.achievements.includes(achievement.id)) continue
+          if (achievement.id === 'bold-move' && state.boldMoveTriggered) {
+            state.unlockAchievement(achievement.id); continue
+          }
+          if (achievement.id === 'community-first-x3' && state.communityStreakTriggered) {
+            state.unlockAchievement(achievement.id); continue
+          }
+          try {
+            if (achievement.condition(snapshot)) state.unlockAchievement(achievement.id)
+          } catch { /* skip */ }
+        }
+      },
+
+      checkUnlocks: () => {
+        const state = get()
+        const snapshot = state.getStateSnapshot()
+        const newUnlocks: string[] = []
+        for (const unlock of unlockables) {
+          if (state.unlockedContent.includes(unlock.id)) continue
+          if (unlock.id === 'alt-endings') {
+            const allComplete = state.hiddenObjectiveStatus.length >= 3 && state.hiddenObjectiveStatus.every((o) => o.completed)
+            if (allComplete) newUnlocks.push(unlock.id)
+            continue
+          }
+          try { if (unlock.unlockCondition(snapshot)) newUnlocks.push(unlock.id) } catch { /* skip */ }
+        }
+        if (newUnlocks.length > 0) set((s) => ({ unlockedContent: [...s.unlockedContent, ...newUnlocks] }))
+      },
+
+      initializeObjectives: (roleId) => {
+        const roleObjectives = hiddenObjectives.filter((o) => o.roleId === roleId)
+        set({ hiddenObjectiveStatus: roleObjectives.map((o) => ({ id: o.id, completed: false })) })
+      },
+
+      updateObjectiveStatus: () => {
+        const state = get()
+        const snapshot = state.getStateSnapshot()
+        set({
+          hiddenObjectiveStatus: state.hiddenObjectiveStatus.map((os) => {
+            if (os.completed) return os
+            const obj = hiddenObjectives.find((o) => o.id === os.id)
+            if (!obj) return os
+            try { return { ...os, completed: obj.condition(snapshot) } } catch { return os }
+          }),
+        })
+      },
+
+      setSandboxEntryTime: () => set((state) => ({
+        sandboxEntryTime: state.sandboxEntryTime || Date.now(),
+      })),
+
+      incrementIntelViews: () => set((state) => ({
+        viewedIntelCount: state.viewedIntelCount + 1,
+      })),
+
+      triggerBoldMove: () => set({ boldMoveTriggered: true }),
     }),
     {
       name: 'innovation-lab-game-state',
@@ -175,7 +369,20 @@ export const useGameStore = create<GameState>()(
         decisionPointIndex: state.decisionPointIndex,
         innovationBudgetUsed: state.innovationBudgetUsed,
         startTime: state.startTime,
+        xp: state.xp,
+        achievements: state.achievements,
+        hiddenObjectiveStatus: state.hiddenObjectiveStatus,
+        crisisHistory: state.crisisHistory,
+        streakMetric: state.streakMetric,
+        streakCount: state.streakCount,
+        unlockedContent: state.unlockedContent,
+        sandboxEntryTime: state.sandboxEntryTime,
+        viewedIntelCount: state.viewedIntelCount,
+        boldMoveTriggered: state.boldMoveTriggered,
+        communityStreakTriggered: state.communityStreakTriggered,
       }),
     }
   )
 )
+
+export { getLevelFromXP, XP_LEVELS }
