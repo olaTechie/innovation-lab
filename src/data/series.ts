@@ -72,7 +72,7 @@ export const sessions: SessionInfo[] = [
       { label: 'Population (Asante)', value: '12.4M' },
     ],
     summary: 'Students step into the shoes of a real decision-maker, navigating branching scenarios with genuine trade-offs across coverage, equity, cost-effectiveness, sustainability, community trust, and health outcomes.',
-    videoId: 'PLACEHOLDER_SERIES_OVERVIEW',
+    videoId: '2-ICVxi6zmc',
   },
   {
     id: 4,

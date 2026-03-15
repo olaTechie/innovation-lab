@@ -106,7 +106,7 @@ export function Landing() {
           color: 'var(--color-text-muted)',
           fontFamily: 'var(--font-mono)',
         }}>
-          IM93Q / IM9M1
+          MD999 / ES99B
         </div>
       </div>
 
@@ -177,7 +177,7 @@ export function Landing() {
           {/* Video embed */}
           <div>
             <VideoEmbed
-              videoId="PLACEHOLDER_SERIES_OVERVIEW"
+              videoId="2-ICVxi6zmc"
               title="Series Overview: Innovation Lab"
             />
           </div>
@@ -300,7 +300,7 @@ export function Landing() {
           fontSize: '0.7rem',
           color: 'var(--color-text-muted)',
         }}>
-          Warwick Medical School &middot; IM93Q / IM9M1
+          Warwick Medical School &middot; MD999 / ES99B
         </div>
       </div>
 

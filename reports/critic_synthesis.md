@@ -43,8 +43,8 @@
 ### 1.7 Module Codes
 
 - **Agent 1:** References "Global Health MD999 & ES99B (Eutopia)"
-- **Task instructions:** References "IM93Q / IM9M1"
-- **Resolution:** Using the task instruction module codes (IM93Q / IM9M1) for the header bar, as these appear to be the correct current module codes.
+- **Task instructions:** References "MD999 / ES99B"
+- **Resolution:** Using the task instruction module codes (MD999 / ES99B) for the header bar, as these appear to be the correct current module codes.
 
 ---
 
@@ -93,7 +93,7 @@
 
 1. **Scoring rebalance:** Agent 3 identifies dominant strategies in 4/6 decision points. The community-based option in S1-DP1 (sum=62 vs next best 50) and local capacity in S3-DP2 (sum=58 vs next best 52) should be playtested. Consider applying Agent 3's suggested adjustments after a classroom pilot.
 
-2. **Module codes:** I used IM93Q / IM9M1 from the task instructions. Agent 1 references MD999 & ES99B. The professor should confirm which codes are current.
+2. **Module codes:** I used MD999 / ES99B from the task instructions. Agent 1 references MD999 & ES99B. The professor should confirm which codes are current.
 
 3. **Video placeholder IDs:** All YouTube video IDs are placeholders (e.g., `PLACEHOLDER_SERIES_OVERVIEW`). These need to be replaced with real video IDs once NotebookLM narration is generated.
 

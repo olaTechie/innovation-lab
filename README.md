@@ -16,7 +16,7 @@ Students role-play as one of 6 stakeholders deploying health innovations in the 
 |---|---|
 | **Duration** | 40-50 minutes (self-directed) |
 | **Target** | PG/Masters students in Global Health |
-| **Module** | IM93Q / IM9M1 |
+| **Module** | MD999 / ES99B |
 | **Sessions** | 1: The Innovation Imperative -> 2: The Innovator's Toolkit -> **3: Mission Control** -> 4: Bridging Innovation to Impact |
 
 ---
@@ -56,13 +56,13 @@ The app has 4 video embed placeholders that show "Video Coming Soon" until real 
 ```typescript
 // Replace PLACEHOLDER_SERIES_OVERVIEW with the YouTube video ID
 // For https://www.youtube.com/watch?v=dQw4w9WgXcQ the ID is 'dQw4w9WgXcQ'
-videoId: 'PLACEHOLDER_SERIES_OVERVIEW',  // <-- change this
+videoId: '2-ICVxi6zmc',  // Series Overview
 ```
 
 **Also update:** `src/components/Landing.tsx` — line 180
 
 ```typescript
-videoId="PLACEHOLDER_SERIES_OVERVIEW"  // <-- change this to the same ID
+videoId="2-ICVxi6zmc"  // Series Overview
 ```
 
 ### 2. Scenario Intro Videos (Before Each Scenario)
@@ -71,9 +71,9 @@ videoId="PLACEHOLDER_SERIES_OVERVIEW"  // <-- change this to the same ID
 
 ```typescript
 const scenarioVideoIds: Record<number, string> = {
-  0: 'PLACEHOLDER_SCENARIO_1',  // <-- Scenario 1: The Silent Epidemic
-  1: 'PLACEHOLDER_SCENARIO_2',  // <-- Scenario 2: The Invisible Threat
-  2: 'PLACEHOLDER_SCENARIO_3',  // <-- Scenario 3: The Long Game
+  0: 'GfrGZuw7naA',  // Scenario 1: The Silent Epidemic
+  1: 'Wd3Pk9F-np8',  // Scenario 2: The Invisible Threat
+  2: 'moy5aDF5fX8',  // Scenario 3: The Long Game
 }
 ```
 
@@ -312,4 +312,4 @@ See `research/R1_content_research_report.md` and `research/R2_frugal_innovation_
 
 Educational use. Created for Warwick Medical School.
 
-**Module codes:** IM93Q / IM9M1
+**Module codes:** MD999 / ES99B

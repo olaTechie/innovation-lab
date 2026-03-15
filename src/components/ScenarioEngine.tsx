@@ -10,9 +10,9 @@ import { ScoreReveal } from './ScoreReveal'
 import type { Scores, ScenarioChoice, GamePhase, CrisisResponseOption } from '../types'
 
 const scenarioVideoIds: Record<number, string> = {
-  0: 'PLACEHOLDER_SCENARIO_1',
-  1: 'PLACEHOLDER_SCENARIO_2',
-  2: 'PLACEHOLDER_SCENARIO_3',
+  0: 'GfrGZuw7naA',
+  1: 'Wd3Pk9F-np8',
+  2: 'moy5aDF5fX8',
 }
 
 type SubState = 'video_intro' | 'briefing' | 'decision' | 'score_reveal' | 'crisis' | 'crisis_score_reveal' | 'outcome'

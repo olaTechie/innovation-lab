@@ -140,7 +140,7 @@ export function ShareCard() {
     ctx.font = '400 10px system-ui'
     ctx.fillText('olatechie.github.io/innovation-lab', 40, H - 18)
     ctx.textAlign = 'right'
-    ctx.fillText('IM93Q / IM9M1', W - 40, H - 18)
+    ctx.fillText('MD999 / ES99B', W - 40, H - 18)
     ctx.textAlign = 'left'
   }, [scores, role, xp, achievements, crisisHistory, hiddenObjectiveStatus, currentRole, roleScore, levelTitle])
 
