@@ -25,6 +25,7 @@ export function Dashboard({ scores, previousScores, compact }: DashboardProps) {
                 <span className="metric-bar-value" style={{ color: grade.color }}>
                   {value}
                 </span>
+                <span className="text-xs" style={{ marginLeft: 4, opacity: 0.7 }}>{grade.label}</span>
                 {delta !== undefined && delta !== 0 && (
                   <span className={`score-delta ${delta > 0 ? 'positive' : 'negative'}`}>
                     {delta > 0 ? '+' : ''}{delta}

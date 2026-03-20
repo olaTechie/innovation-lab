@@ -397,7 +397,10 @@ export function ScenarioEngine() {
               <div
                 key={choice.id}
                 className={`choice-card ${selectedChoice?.id === choice.id ? 'selected' : ''}`}
+                role="button"
+                tabIndex={0}
                 onClick={() => handleChoiceSelect(choice)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChoiceSelect(choice) } }}
               >
                 <h4 style={{ marginBottom: 6 }}>{choice.label}</h4>
                 <p className="text-sm text-secondary" style={{ lineHeight: 1.6, marginBottom: 0 }}>{choice.description}</p>

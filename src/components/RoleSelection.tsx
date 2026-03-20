@@ -43,7 +43,10 @@ export function RoleSelection() {
             <div
               key={role.id}
               className={`card card-interactive ${selectedId === role.id ? 'selected' : ''}`}
+              role="button"
+              tabIndex={0}
               onClick={() => handleSelect(role.id)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSelect(role.id) } }}
               style={{
                 borderColor: selectedId === role.id ? role.color : undefined,
                 boxShadow: selectedId === role.id ? `0 0 20px ${role.color}22` : undefined,

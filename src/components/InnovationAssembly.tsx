@@ -175,10 +175,13 @@ export function InnovationAssembly() {
                   <div
                     key={inn.id}
                     className={`innovation-card ${draggedId === inn.id ? 'dragging' : ''} ${!canAfford ? 'deployed' : ''}`}
+                    role="button"
+                    tabIndex={canAfford ? 0 : -1}
                     draggable={canAfford}
                     onDragStart={() => canAfford && handleDragStart(inn.id)}
                     onDragEnd={handleDragEnd}
                     onClick={() => canAfford && handleDrop(inn.id)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); canAfford && handleDrop(inn.id) } }}
                     style={{ borderLeft: `3px solid ${getCategoryColor(inn.category)}` }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
