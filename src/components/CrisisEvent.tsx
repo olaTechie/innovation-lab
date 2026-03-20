@@ -66,7 +66,10 @@ export function CrisisEvent({ crisis, onRespond }: CrisisEventProps) {
             <div
               key={response.id}
               className={`choice-card ${selected?.id === response.id ? 'selected' : ''}`}
+              role="button"
+              tabIndex={0}
               onClick={() => setSelected(response)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelected(response) } }}
             >
               <h4 style={{ marginBottom: 6 }}>{response.title}</h4>
               <p className="text-sm text-secondary" style={{ lineHeight: 1.5, marginBottom: 8 }}>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { roles } from '../data/roles'
+import { GameImage } from './GameImage'
 import type { RoleId } from '../types'
 
 export function RoleSelection() {
@@ -42,26 +43,25 @@ export function RoleSelection() {
             <div
               key={role.id}
               className={`card card-interactive ${selectedId === role.id ? 'selected' : ''}`}
+              role="button"
+              tabIndex={0}
               onClick={() => handleSelect(role.id)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSelect(role.id) } }}
               style={{
                 borderColor: selectedId === role.id ? role.color : undefined,
                 boxShadow: selectedId === role.id ? `0 0 20px ${role.color}22` : undefined,
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: 'var(--space-md)' }}>
-                <div style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 'var(--radius-md)',
-                  background: `${role.color}18`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem',
-                  flexShrink: 0,
-                }}>
-                  {role.icon}
-                </div>
+                <GameImage
+                  src={role.portraitImage || ''}
+                  fallbackEmoji={role.icon}
+                  fallbackGradient={`${role.color}18`}
+                  alt={role.title}
+                  width={48}
+                  height={48}
+                  borderRadius="var(--radius-md)"
+                />
                 <div>
                   <h4 style={{ color: role.color }}>{role.title}</h4>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 4 }}>
@@ -89,7 +89,15 @@ export function RoleSelection() {
             margin: '0 auto',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
-              <span style={{ fontSize: '2rem' }}>{selected.icon}</span>
+              <GameImage
+                src={selected.portraitImage || ''}
+                fallbackEmoji={selected.icon}
+                fallbackGradient={`${selected.color}18`}
+                alt={selected.title}
+                width={40}
+                height={40}
+                borderRadius="var(--radius-md)"
+              />
               <div>
                 <h3 style={{ color: selected.color }}>{selected.title}</h3>
                 <p className="text-sm text-secondary" style={{ marginBottom: 0 }}>Your mission parameters</p>

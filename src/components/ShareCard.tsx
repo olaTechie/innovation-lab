@@ -1,21 +1,9 @@
 // src/components/ShareCard.tsx
 import { useRef, useCallback } from 'react'
-import { useGameStore } from '../store/gameStore'
+import { useGameStore, XP_LEVELS } from '../store/gameStore'
 import { roles } from '../data/roles'
-import { getOverallScore, getRoleWeightedScore, scoreLabels } from '../utils/scoring'
+import { getOverallScore, getRoleWeightedScore, getLetterGrade, scoreLabels } from '../utils/scoring'
 import type { Scores } from '../types'
-
-function getLetterGrade(score: number): string {
-  if (score >= 90) return 'A+'
-  if (score >= 85) return 'A'
-  if (score >= 80) return 'A-'
-  if (score >= 75) return 'B+'
-  if (score >= 70) return 'B'
-  if (score >= 65) return 'B-'
-  if (score >= 60) return 'C+'
-  if (score >= 55) return 'C'
-  return score >= 40 ? 'D' : 'F'
-}
 
 export function ShareCard() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -24,41 +12,12 @@ export function ShareCard() {
   const overallScore = getOverallScore(scores)
   const roleScore = role ? getRoleWeightedScore(scores, role) : overallScore
 
-  const XP_LEVELS = [
-    { level: 1, title: 'Field Observer', threshold: 0 },
-    { level: 2, title: 'Health Strategist', threshold: 500 },
-    { level: 3, title: 'Policy Architect', threshold: 1500 },
-    { level: 4, title: 'Global Health Leader', threshold: 3000 },
-  ]
   let levelTitle = 'Field Observer'
   for (let i = XP_LEVELS.length - 1; i >= 0; i--) {
     if (xp >= XP_LEVELS[i].threshold) { levelTitle = XP_LEVELS[i].title; break }
   }
 
-  const drawCard = useCallback(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const W = 1200, H = 630
-    canvas.width = W
-    canvas.height = H
-
-    // Background
-    const bg = ctx.createLinearGradient(0, 0, W, H)
-    bg.addColorStop(0, '#0c0d1e')
-    bg.addColorStop(0.5, '#1a0a2e')
-    bg.addColorStop(1, '#0a0b1a')
-    ctx.fillStyle = bg
-    ctx.fillRect(0, 0, W, H)
-
-    // Grid overlay
-    ctx.strokeStyle = 'rgba(123, 45, 142, 0.04)'
-    ctx.lineWidth = 1
-    for (let x = 0; x < W; x += 20) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() }
-    for (let y = 0; y < H; y += 20) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
-
+  const drawCardContent = useCallback((ctx: CanvasRenderingContext2D, W: number, H: number) => {
     // Header
     ctx.fillStyle = 'rgba(123, 45, 142, 0.6)'
     ctx.font = '600 11px system-ui'
@@ -142,7 +101,45 @@ export function ShareCard() {
     ctx.textAlign = 'right'
     ctx.fillText('MD999 / ES99B', W - 40, H - 18)
     ctx.textAlign = 'left'
-  }, [scores, role, xp, achievements, crisisHistory, hiddenObjectiveStatus, currentRole, roleScore, levelTitle])
+  }, [scores, xp, achievements, crisisHistory, hiddenObjectiveStatus, currentRole, roleScore, levelTitle])
+
+  const drawFallbackBackground = useCallback((ctx: CanvasRenderingContext2D, W: number, H: number) => {
+    const bg = ctx.createLinearGradient(0, 0, W, H)
+    bg.addColorStop(0, '#0c0d1e')
+    bg.addColorStop(0.5, '#1a0a2e')
+    bg.addColorStop(1, '#0a0b1a')
+    ctx.fillStyle = bg
+    ctx.fillRect(0, 0, W, H)
+
+    // Grid overlay
+    ctx.strokeStyle = 'rgba(123, 45, 142, 0.04)'
+    ctx.lineWidth = 1
+    for (let x = 0; x < W; x += 20) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() }
+    for (let y = 0; y < H; y += 20) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
+  }, [])
+
+  const drawCard = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const W = 1200, H = 630
+    canvas.width = W
+    canvas.height = H
+
+    // Try loading background image; fall back to gradient on error
+    const bgImg = new Image()
+    bgImg.src = '/images/share-bg.png'
+    bgImg.onload = () => {
+      ctx.drawImage(bgImg, 0, 0, W, H)
+      drawCardContent(ctx, W, H)
+    }
+    bgImg.onerror = () => {
+      drawFallbackBackground(ctx, W, H)
+      drawCardContent(ctx, W, H)
+    }
+  }, [drawCardContent, drawFallbackBackground])
 
   const handleDownload = () => {
     drawCard()

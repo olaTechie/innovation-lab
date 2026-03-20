@@ -100,6 +100,7 @@ export function CountryBriefing() {
           {/* Map */}
           <div className="animate-fade-in-up card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 'var(--space-xl)' }}>
             <RegionMap />
+            <img src="/images/map/asante-illustrated.png" alt="Illustrated map of Asante" style={{ width: '100%', maxWidth: 380, marginTop: 'var(--space-md)', borderRadius: 'var(--radius-md)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
           </div>
 
           {/* Key stats */}

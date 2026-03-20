@@ -192,6 +192,19 @@ p:last-child { margin-bottom: 0; }
   transform: translateY(-2px);
 }
 
+/* Accessibility focus styles */
+.card-interactive:focus-visible,
+.choice-card:focus-visible,
+.innovation-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 /* Glassmorphism Card */
 .card-glass {
   background: rgba(26, 34, 53, 0.7);
@@ -1199,4 +1212,32 @@ textarea::placeholder {
   width: 70px;
   flex-shrink: 0;
   text-align: right;
+}
+
+/* Responsive layout fixes */
+.assembly-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+}
+
+.sandbox-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+}
+
+.mission-report-scores {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .assembly-layout {
+    grid-template-columns: 1fr;
+  }
+  .sandbox-layout {
+    grid-template-columns: 1fr;
+  }
+  .mission-report-scores {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

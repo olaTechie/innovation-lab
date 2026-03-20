@@ -6,6 +6,7 @@ export const roles: Role[] = [
     title: 'Minister of Health',
     shortTitle: 'Minister',
     icon: '\u{1F3DB}',
+    portraitImage: '/images/portraits/minister.png',
     color: '#2563eb',
     description: 'You control the national health budget and set policy priorities. Your goal is to maximize population-level coverage while staying within fiscal constraints. Every dollar must be justified to Parliament.',
     priorities: [
@@ -22,6 +23,7 @@ export const roles: Role[] = [
     title: 'NGO Director',
     shortTitle: 'NGO',
     icon: '\u{1F91D}',
+    portraitImage: '/images/portraits/ngo-director.png',
     color: '#16a34a',
     description: 'You lead a major international health NGO operating in Asante. Your funding comes from donors who want measurable community impact and sustainability. You must balance quick wins with long-term capacity building.',
     priorities: [
@@ -38,6 +40,7 @@ export const roles: Role[] = [
     title: 'Community Health Worker',
     shortTitle: 'CHW',
     icon: '\u{1FA7A}',
+    portraitImage: '/images/portraits/chw.png',
     color: '#ea580c',
     description: 'You serve the communities directly. You know which interventions work on the ground and which fail despite good intentions. You advocate for culturally appropriate, practical solutions that communities can sustain.',
     priorities: [
@@ -54,6 +57,7 @@ export const roles: Role[] = [
     title: 'Tech Entrepreneur',
     shortTitle: 'Tech',
     icon: '\u{1F4F1}',
+    portraitImage: '/images/portraits/tech-entrepreneur.png',
     color: '#9333ea',
     description: 'You believe technology can leapfrog traditional barriers to healthcare access, but you know from experience that the best health technologies are those designed with communities, not for them. Your challenge is proving that innovation can scale sustainably in low-resource settings while maintaining quality.',
     priorities: [
@@ -70,6 +74,7 @@ export const roles: Role[] = [
     title: 'WHO Regional Advisor',
     shortTitle: 'WHO',
     icon: '\u{1F30D}',
+    portraitImage: '/images/portraits/who-advisor.png',
     color: '#0891b2',
     description: 'You advise on evidence-based interventions and ensure equity across all regions. You push for solutions with proven track records and worry about unintended consequences of untested approaches.',
     priorities: [
@@ -86,6 +91,7 @@ export const roles: Role[] = [
     title: 'Patient Advocate',
     shortTitle: 'Advocate',
     icon: '\u{2764}',
+    portraitImage: '/images/portraits/patient-advocate.png',
     color: '#dc2626',
     description: 'You represent the voices of patients and communities. You fight for access, affordability, dignity, and the right to participate in decisions that affect health. You challenge top-down approaches that ignore lived experience.',
     priorities: [

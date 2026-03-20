@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { innovations, innovationCategories } from '../data/innovations'
 import { roles } from '../data/roles'
 import { Dashboard } from './Dashboard'
+import { GameImage } from './GameImage'
 import type { Innovation, InnovationCategory, Scores, GamePhase } from '../types'
 
 export function InnovationAssembly() {
@@ -18,6 +19,7 @@ export function InnovationAssembly() {
     advanceScenario,
     addXP,
     checkAchievements,
+    setInnovationBudgetUsed,
   } = useGameStore()
 
   const [selectedCategory, setSelectedCategory] = useState<InnovationCategory | 'all'>('all')
@@ -33,6 +35,10 @@ export function InnovationAssembly() {
     const inn = innovations.find((i) => i.id === d.innovationId)
     return sum + (inn?.cost || 0)
   }, 0)
+
+  useEffect(() => {
+    setInnovationBudgetUsed(budgetUsed)
+  }, [budgetUsed, setInnovationBudgetUsed])
 
   const filteredInnovations = innovations.filter((i) =>
     (selectedCategory === 'all' || i.category === selectedCategory) && !deployedIds.has(i.id)
@@ -137,7 +143,7 @@ export function InnovationAssembly() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 'var(--space-xl)' }}>
+        <div className="assembly-layout" style={{ gap: 'var(--space-xl)' }}>
           {/* Left: Available innovations */}
           <div>
             {/* Category filter */}
@@ -169,14 +175,27 @@ export function InnovationAssembly() {
                   <div
                     key={inn.id}
                     className={`innovation-card ${draggedId === inn.id ? 'dragging' : ''} ${!canAfford ? 'deployed' : ''}`}
+                    role="button"
+                    tabIndex={canAfford ? 0 : -1}
                     draggable={canAfford}
                     onDragStart={() => canAfford && handleDragStart(inn.id)}
                     onDragEnd={handleDragEnd}
                     onClick={() => canAfford && handleDrop(inn.id)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); canAfford && handleDrop(inn.id) } }}
                     style={{ borderLeft: `3px solid ${getCategoryColor(inn.category)}` }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
-                      <h4 style={{ fontSize: '0.9rem', lineHeight: 1.3 }}>{inn.name}</h4>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <GameImage
+                          src={inn.imageUrl || ''}
+                          alt={inn.name}
+                          fallbackEmoji={inn.category.charAt(0).toUpperCase()}
+                          width={40}
+                          height={40}
+                          borderRadius="var(--radius-sm)"
+                        />
+                        <h4 style={{ fontSize: '0.9rem', lineHeight: 1.3 }}>{inn.name}</h4>
+                      </div>
                       <span className="font-mono text-xs font-semibold" style={{
                         color: canAfford ? 'var(--color-warning)' : 'var(--color-danger)',
                         flexShrink: 0,

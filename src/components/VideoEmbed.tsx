@@ -85,7 +85,7 @@ export function VideoEmbed({ videoId, title = 'Video', aspectRatio = '16/9' }: V
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-          sandbox="allow-scripts allow-same-origin allow-presentation"
+          sandbox="allow-scripts allow-same-origin allow-presentation allow-autoplay"
           style={{
             position: 'absolute',
             top: 0,

@@ -41,6 +41,7 @@ export function ScenarioEngine() {
   const [lastEffects, setLastEffects] = useState<Partial<Scores>>({})
   const [lastNarrativeFlash, setLastNarrativeFlash] = useState('')
   const [activeCrisis, setActiveCrisis] = useState<typeof crisisEvents[0] | null>(null)
+  const [bannerFailed, setBannerFailed] = useState(false)
 
   const scenario = scenarios[scenarioIndex]
   const decisionPoint = scenario?.decisionPoints[decisionPointIndex]
@@ -136,7 +137,7 @@ export function ScenarioEngine() {
     addXP(25)
 
     // Bold move detection
-    const hasNegativeEffect = Object.values(effects).some((v) => v !== undefined && v <= -10)
+    const hasNegativeEffect = Object.values(effects).some((v) => v !== undefined && v <= -5)
     if (hasNegativeEffect) triggerBoldMove()
 
     // Streak tracking — find dominant positive metric
@@ -216,6 +217,15 @@ export function ScenarioEngine() {
             <h1 style={{ marginBottom: 'var(--space-sm)', fontSize: '2.5rem' }}>{scenario.title}</h1>
             <p className="text-lg text-secondary">{scenario.subtitle}</p>
           </div>
+
+          {!bannerFailed && (
+            <img
+              src={`/images/banners/scenario-${scenarioIndex + 1}.jpg`}
+              alt={scenario.title}
+              style={{ width: '100%', maxHeight: 280, objectFit: 'cover', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-lg)' }}
+              onError={() => setBannerFailed(true)}
+            />
+          )}
 
           {/* Setting */}
           <div className="card" style={{ marginBottom: 'var(--space-lg)', borderLeft: '3px solid var(--color-warning)' }}>
@@ -387,7 +397,10 @@ export function ScenarioEngine() {
               <div
                 key={choice.id}
                 className={`choice-card ${selectedChoice?.id === choice.id ? 'selected' : ''}`}
+                role="button"
+                tabIndex={0}
                 onClick={() => handleChoiceSelect(choice)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChoiceSelect(choice) } }}
               >
                 <h4 style={{ marginBottom: 6 }}>{choice.label}</h4>
                 <p className="text-sm text-secondary" style={{ lineHeight: 1.6, marginBottom: 0 }}>{choice.description}</p>
