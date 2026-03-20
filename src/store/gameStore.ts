@@ -59,6 +59,7 @@ interface GameState {
   viewedIntelCount: number
   boldMoveTriggered: boolean
   communityStreakTriggered: boolean
+  missionReportXPAwarded: number[]
 
   // Actions
   setPhase: (phase: GamePhase) => void
@@ -74,6 +75,7 @@ interface GameState {
   setScenarioIndex: (index: number) => void
   setDecisionPointIndex: (index: number) => void
   setSandboxScores: (scores: Scores) => void
+  setInnovationBudgetUsed: (used: number) => void
   resetGame: () => void
   startGame: () => void
 
@@ -90,6 +92,7 @@ interface GameState {
   setSandboxEntryTime: () => void
   incrementIntelViews: () => void
   triggerBoldMove: () => void
+  markMissionReportXP: (scenarioIndex: number) => void
   getStateSnapshot: () => GameStateSnapshot
 }
 
@@ -140,6 +143,7 @@ export const useGameStore = create<GameState>()(
       viewedIntelCount: 0,
       boldMoveTriggered: false,
       communityStreakTriggered: false,
+      missionReportXPAwarded: [],
 
       setPhase: (phase) => set({ phase }),
 
@@ -206,6 +210,8 @@ export const useGameStore = create<GameState>()(
 
       setSandboxScores: (scores) => set({ sandboxScores: scores }),
 
+      setInnovationBudgetUsed: (used) => set({ innovationBudgetUsed: used }),
+
       resetGame: () =>
         set({
           phase: 'landing',
@@ -232,6 +238,7 @@ export const useGameStore = create<GameState>()(
           viewedIntelCount: 0,
           boldMoveTriggered: false,
           communityStreakTriggered: false,
+          missionReportXPAwarded: [],
         }),
 
       startGame: () => set({ startTime: Date.now() }),
@@ -354,6 +361,11 @@ export const useGameStore = create<GameState>()(
       })),
 
       triggerBoldMove: () => set({ boldMoveTriggered: true }),
+
+      markMissionReportXP: (scenarioIndex) => set((state) => {
+        if (state.missionReportXPAwarded.includes(scenarioIndex)) return {}
+        return { missionReportXPAwarded: [...state.missionReportXPAwarded, scenarioIndex] }
+      }),
     }),
     {
       name: 'innovation-lab-game-state',
@@ -380,6 +392,7 @@ export const useGameStore = create<GameState>()(
         viewedIntelCount: state.viewedIntelCount,
         boldMoveTriggered: state.boldMoveTriggered,
         communityStreakTriggered: state.communityStreakTriggered,
+        missionReportXPAwarded: state.missionReportXPAwarded,
       }),
     }
   )

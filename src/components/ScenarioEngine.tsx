@@ -137,7 +137,7 @@ export function ScenarioEngine() {
     addXP(25)
 
     // Bold move detection
-    const hasNegativeEffect = Object.values(effects).some((v) => v !== undefined && v <= -10)
+    const hasNegativeEffect = Object.values(effects).some((v) => v !== undefined && v <= -5)
     if (hasNegativeEffect) triggerBoldMove()
 
     // Streak tracking — find dominant positive metric

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { innovations, innovationCategories } from '../data/innovations'
 import { roles } from '../data/roles'
@@ -19,6 +19,7 @@ export function InnovationAssembly() {
     advanceScenario,
     addXP,
     checkAchievements,
+    setInnovationBudgetUsed,
   } = useGameStore()
 
   const [selectedCategory, setSelectedCategory] = useState<InnovationCategory | 'all'>('all')
@@ -34,6 +35,10 @@ export function InnovationAssembly() {
     const inn = innovations.find((i) => i.id === d.innovationId)
     return sum + (inn?.cost || 0)
   }, 0)
+
+  useEffect(() => {
+    setInnovationBudgetUsed(budgetUsed)
+  }, [budgetUsed, setInnovationBudgetUsed])
 
   const filteredInnovations = innovations.filter((i) =>
     (selectedCategory === 'all' || i.category === selectedCategory) && !deployedIds.has(i.id)

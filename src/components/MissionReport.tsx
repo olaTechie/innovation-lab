@@ -7,10 +7,13 @@ import { getRoleWeightedScore, getScoreGrade, scoreLabels, scoreColors } from '.
 import type { Scores, GamePhase } from '../types'
 
 export function MissionReport() {
-  const { scores, role, decisions, crisisHistory, scenarioIndex, setPhase, addXP, checkAchievements, updateObjectiveStatus } = useGameStore()
+  const { scores, role, decisions, crisisHistory, scenarioIndex, setPhase, addXP, checkAchievements, updateObjectiveStatus, missionReportXPAwarded, markMissionReportXP } = useGameStore()
 
   useEffect(() => {
-    addXP(100)
+    if (!missionReportXPAwarded.includes(scenarioIndex)) {
+      addXP(100)
+      markMissionReportXP(scenarioIndex)
+    }
     checkAchievements()
     updateObjectiveStatus()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
