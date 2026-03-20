@@ -1,5 +1,6 @@
 // src/components/XPProgressBar.tsx
 import { useGameStore } from '../store/gameStore'
+import { GameImage } from './GameImage'
 
 const XP_LEVELS = [
   { level: 1, title: 'Field Observer', threshold: 0 },
@@ -7,6 +8,13 @@ const XP_LEVELS = [
   { level: 3, title: 'Policy Architect', threshold: 1500 },
   { level: 4, title: 'Global Health Leader', threshold: 3000 },
 ]
+
+const RANK_IMAGES: Record<string, string> = {
+  'Field Observer': '/images/ranks/field-observer.png',
+  'Health Strategist': '/images/ranks/health-strategist.png',
+  'Policy Architect': '/images/ranks/policy-architect.png',
+  'Global Health Leader': '/images/ranks/global-health-leader.png',
+}
 
 export function XPProgressBar() {
   const xp = useGameStore((s) => s.xp)
@@ -29,7 +37,15 @@ export function XPProgressBar() {
   return (
     <div className="xp-progress-bar">
       <div className="xp-progress-info">
-        <span className="xp-level-title">
+        <span className="xp-level-title" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          <GameImage
+            src={RANK_IMAGES[currentLevel.title] || ''}
+            alt={currentLevel.title}
+            fallbackEmoji={'\u2B50'}
+            width={24}
+            height={24}
+            borderRadius="4px"
+          />
           Lv {currentLevel.level} · {currentLevel.title}
         </span>
         <span className="xp-count">{xp} XP</span>

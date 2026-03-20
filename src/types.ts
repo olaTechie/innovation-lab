@@ -5,6 +5,7 @@ export interface Role {
   title: string
   shortTitle: string
   icon: string
+  portraitImage?: string
   color: string
   description: string
   priorities: string[]
@@ -54,6 +55,7 @@ export interface Innovation {
   impact: number
   description: string
   realWorldBasis: string
+  imageUrl?: string
   compatibility: Partial<Record<InnovationCategory, number>>
   roleAffinity: Partial<Record<RoleId, number>>
   effects: Partial<Scores>

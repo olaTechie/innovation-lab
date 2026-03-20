@@ -3,6 +3,7 @@ import { useGameStore } from '../store/gameStore'
 import { innovations, innovationCategories } from '../data/innovations'
 import { roles } from '../data/roles'
 import { Dashboard } from './Dashboard'
+import { GameImage } from './GameImage'
 import type { Innovation, InnovationCategory, Scores, GamePhase } from '../types'
 
 export function InnovationAssembly() {
@@ -176,7 +177,17 @@ export function InnovationAssembly() {
                     style={{ borderLeft: `3px solid ${getCategoryColor(inn.category)}` }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
-                      <h4 style={{ fontSize: '0.9rem', lineHeight: 1.3 }}>{inn.name}</h4>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <GameImage
+                          src={inn.imageUrl || ''}
+                          alt={inn.name}
+                          fallbackEmoji={inn.category.charAt(0).toUpperCase()}
+                          width={40}
+                          height={40}
+                          borderRadius="var(--radius-sm)"
+                        />
+                        <h4 style={{ fontSize: '0.9rem', lineHeight: 1.3 }}>{inn.name}</h4>
+                      </div>
                       <span className="font-mono text-xs font-semibold" style={{
                         color: canAfford ? 'var(--color-warning)' : 'var(--color-danger)',
                         flexShrink: 0,

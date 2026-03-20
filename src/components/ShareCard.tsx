@@ -35,30 +35,7 @@ export function ShareCard() {
     if (xp >= XP_LEVELS[i].threshold) { levelTitle = XP_LEVELS[i].title; break }
   }
 
-  const drawCard = useCallback(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const W = 1200, H = 630
-    canvas.width = W
-    canvas.height = H
-
-    // Background
-    const bg = ctx.createLinearGradient(0, 0, W, H)
-    bg.addColorStop(0, '#0c0d1e')
-    bg.addColorStop(0.5, '#1a0a2e')
-    bg.addColorStop(1, '#0a0b1a')
-    ctx.fillStyle = bg
-    ctx.fillRect(0, 0, W, H)
-
-    // Grid overlay
-    ctx.strokeStyle = 'rgba(123, 45, 142, 0.04)'
-    ctx.lineWidth = 1
-    for (let x = 0; x < W; x += 20) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() }
-    for (let y = 0; y < H; y += 20) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
-
+  const drawCardContent = useCallback((ctx: CanvasRenderingContext2D, W: number, H: number) => {
     // Header
     ctx.fillStyle = 'rgba(123, 45, 142, 0.6)'
     ctx.font = '600 11px system-ui'
@@ -142,7 +119,45 @@ export function ShareCard() {
     ctx.textAlign = 'right'
     ctx.fillText('MD999 / ES99B', W - 40, H - 18)
     ctx.textAlign = 'left'
-  }, [scores, role, xp, achievements, crisisHistory, hiddenObjectiveStatus, currentRole, roleScore, levelTitle])
+  }, [scores, xp, achievements, crisisHistory, hiddenObjectiveStatus, currentRole, roleScore, levelTitle])
+
+  const drawFallbackBackground = useCallback((ctx: CanvasRenderingContext2D, W: number, H: number) => {
+    const bg = ctx.createLinearGradient(0, 0, W, H)
+    bg.addColorStop(0, '#0c0d1e')
+    bg.addColorStop(0.5, '#1a0a2e')
+    bg.addColorStop(1, '#0a0b1a')
+    ctx.fillStyle = bg
+    ctx.fillRect(0, 0, W, H)
+
+    // Grid overlay
+    ctx.strokeStyle = 'rgba(123, 45, 142, 0.04)'
+    ctx.lineWidth = 1
+    for (let x = 0; x < W; x += 20) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() }
+    for (let y = 0; y < H; y += 20) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
+  }, [])
+
+  const drawCard = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const W = 1200, H = 630
+    canvas.width = W
+    canvas.height = H
+
+    // Try loading background image; fall back to gradient on error
+    const bgImg = new Image()
+    bgImg.src = '/images/share-bg.png'
+    bgImg.onload = () => {
+      ctx.drawImage(bgImg, 0, 0, W, H)
+      drawCardContent(ctx, W, H)
+    }
+    bgImg.onerror = () => {
+      drawFallbackBackground(ctx, W, H)
+      drawCardContent(ctx, W, H)
+    }
+  }, [drawCardContent, drawFallbackBackground])
 
   const handleDownload = () => {
     drawCard()

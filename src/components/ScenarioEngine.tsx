@@ -41,6 +41,7 @@ export function ScenarioEngine() {
   const [lastEffects, setLastEffects] = useState<Partial<Scores>>({})
   const [lastNarrativeFlash, setLastNarrativeFlash] = useState('')
   const [activeCrisis, setActiveCrisis] = useState<typeof crisisEvents[0] | null>(null)
+  const [bannerFailed, setBannerFailed] = useState(false)
 
   const scenario = scenarios[scenarioIndex]
   const decisionPoint = scenario?.decisionPoints[decisionPointIndex]
@@ -216,6 +217,15 @@ export function ScenarioEngine() {
             <h1 style={{ marginBottom: 'var(--space-sm)', fontSize: '2.5rem' }}>{scenario.title}</h1>
             <p className="text-lg text-secondary">{scenario.subtitle}</p>
           </div>
+
+          {!bannerFailed && (
+            <img
+              src={`/images/banners/scenario-${scenarioIndex + 1}.jpg`}
+              alt={scenario.title}
+              style={{ width: '100%', maxHeight: 280, objectFit: 'cover', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-lg)' }}
+              onError={() => setBannerFailed(true)}
+            />
+          )}
 
           {/* Setting */}
           <div className="card" style={{ marginBottom: 'var(--space-lg)', borderLeft: '3px solid var(--color-warning)' }}>
