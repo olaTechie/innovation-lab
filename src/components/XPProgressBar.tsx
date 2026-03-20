@@ -1,13 +1,6 @@
 // src/components/XPProgressBar.tsx
-import { useGameStore } from '../store/gameStore'
+import { useGameStore, XP_LEVELS } from '../store/gameStore'
 import { GameImage } from './GameImage'
-
-const XP_LEVELS = [
-  { level: 1, title: 'Field Observer', threshold: 0 },
-  { level: 2, title: 'Health Strategist', threshold: 500 },
-  { level: 3, title: 'Policy Architect', threshold: 1500 },
-  { level: 4, title: 'Global Health Leader', threshold: 3000 },
-]
 
 const RANK_IMAGES: Record<string, string> = {
   'Field Observer': '/images/ranks/field-observer.png',

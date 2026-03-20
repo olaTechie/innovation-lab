@@ -113,7 +113,7 @@ export function Sandbox() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 'var(--space-xl)' }}>
+        <div className="sandbox-layout" style={{ gap: 'var(--space-xl)' }}>
           {/* Left: Controls */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xl)' }}>
             {/* Score sliders */}

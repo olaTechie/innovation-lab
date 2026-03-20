@@ -1200,3 +1200,31 @@ textarea::placeholder {
   flex-shrink: 0;
   text-align: right;
 }
+
+/* Responsive layout fixes */
+.assembly-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+}
+
+.sandbox-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+}
+
+.mission-report-scores {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .assembly-layout {
+    grid-template-columns: 1fr;
+  }
+  .sandbox-layout {
+    grid-template-columns: 1fr;
+  }
+  .mission-report-scores {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,21 +1,9 @@
 // src/components/ShareCard.tsx
 import { useRef, useCallback } from 'react'
-import { useGameStore } from '../store/gameStore'
+import { useGameStore, XP_LEVELS } from '../store/gameStore'
 import { roles } from '../data/roles'
-import { getOverallScore, getRoleWeightedScore, scoreLabels } from '../utils/scoring'
+import { getOverallScore, getRoleWeightedScore, getLetterGrade, scoreLabels } from '../utils/scoring'
 import type { Scores } from '../types'
-
-function getLetterGrade(score: number): string {
-  if (score >= 90) return 'A+'
-  if (score >= 85) return 'A'
-  if (score >= 80) return 'A-'
-  if (score >= 75) return 'B+'
-  if (score >= 70) return 'B'
-  if (score >= 65) return 'B-'
-  if (score >= 60) return 'C+'
-  if (score >= 55) return 'C'
-  return score >= 40 ? 'D' : 'F'
-}
 
 export function ShareCard() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -24,12 +12,6 @@ export function ShareCard() {
   const overallScore = getOverallScore(scores)
   const roleScore = role ? getRoleWeightedScore(scores, role) : overallScore
 
-  const XP_LEVELS = [
-    { level: 1, title: 'Field Observer', threshold: 0 },
-    { level: 2, title: 'Health Strategist', threshold: 500 },
-    { level: 3, title: 'Policy Architect', threshold: 1500 },
-    { level: 4, title: 'Global Health Leader', threshold: 3000 },
-  ]
   let levelTitle = 'Field Observer'
   for (let i = XP_LEVELS.length - 1; i >= 0; i--) {
     if (xp >= XP_LEVELS[i].threshold) { levelTitle = XP_LEVELS[i].title; break }

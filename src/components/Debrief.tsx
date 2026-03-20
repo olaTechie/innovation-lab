@@ -15,11 +15,13 @@ import {
   getScoreGrade,
   scoreLabels,
 } from '../utils/scoring'
-import type { Scores } from '../types'
+import type { Scores, GamePhase } from '../types'
 
 export function Debrief() {
-  const { scores, role, decisions, deployedInnovations, journalEntries, setPhase, hiddenObjectiveStatus, checkUnlocks, updateObjectiveStatus } = useGameStore()
+  const { scores, role, decisions, deployedInnovations, journalEntries, setPhase, hiddenObjectiveStatus, checkUnlocks, updateObjectiveStatus, addJournalEntry } = useGameStore()
   const [activeTab, setActiveTab] = useState<'overview' | 'achievements' | 'comparison' | 'journal' | 'decisions'>('overview')
+  const [reflectionsSaved, setReflectionsSaved] = useState(false)
+  const [expandedDecisions, setExpandedDecisions] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     updateObjectiveStatus()
@@ -196,6 +198,32 @@ export function Debrief() {
                   />
                 </div>
               ))}
+              {reflectionResponses.some((r) => r.trim().length > 0) && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+                  <button
+                    className="btn btn-primary btn-sm"
+                    disabled={reflectionsSaved}
+                    onClick={() => {
+                      reflectionPrompts.forEach((prompt, i) => {
+                        if (reflectionResponses[i].trim().length > 0) {
+                          addJournalEntry({
+                            phase: 'debrief' as GamePhase,
+                            prompt,
+                            response: reflectionResponses[i],
+                          })
+                        }
+                      })
+                      setReflectionsSaved(true)
+                      setTimeout(() => setReflectionsSaved(false), 3000)
+                    }}
+                  >
+                    {reflectionsSaved ? 'Saved!' : 'Save Reflections'}
+                  </button>
+                  {reflectionsSaved && (
+                    <span className="text-sm" style={{ color: 'var(--color-success)' }}>Saved!</span>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Hidden Objectives */}
@@ -282,7 +310,44 @@ export function Debrief() {
                   <p className="text-sm" style={{ color: 'var(--color-accent)', marginBottom: 4 }}>
                     Chose: {choice?.label}
                   </p>
-                  <p className="text-xs text-secondary" style={{ lineHeight: 1.5 }}>{choice?.narrative?.slice(0, 200)}...</p>
+                  <p className="text-xs text-secondary" style={{ lineHeight: 1.5 }}>
+                    {choice?.narrative && choice.narrative.length > 200 ? (
+                      <>
+                        {expandedDecisions.has(dec.choiceId)
+                          ? choice.narrative
+                          : `${choice.narrative.slice(0, 200)}...`}
+                        {' '}
+                        <button
+                          className="btn-ghost"
+                          style={{
+                            display: 'inline',
+                            padding: 0,
+                            border: 'none',
+                            background: 'none',
+                            color: 'var(--color-accent)',
+                            cursor: 'pointer',
+                            fontSize: 'inherit',
+                            textDecoration: 'underline',
+                          }}
+                          onClick={() => {
+                            setExpandedDecisions((prev) => {
+                              const next = new Set(prev)
+                              if (next.has(dec.choiceId)) {
+                                next.delete(dec.choiceId)
+                              } else {
+                                next.add(dec.choiceId)
+                              }
+                              return next
+                            })
+                          }}
+                        >
+                          {expandedDecisions.has(dec.choiceId) ? 'Show less' : 'Read more'}
+                        </button>
+                      </>
+                    ) : (
+                      choice?.narrative
+                    )}
+                  </p>
                 </div>
               )
             })}

@@ -143,7 +143,7 @@ export function InnovationAssembly() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 'var(--space-xl)' }}>
+        <div className="assembly-layout" style={{ gap: 'var(--space-xl)' }}>
           {/* Left: Available innovations */}
           <div>
             {/* Category filter */}

@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { scenarios } from '../data/scenarios'
 import { roles } from '../data/roles'
-import { getRoleWeightedScore, getScoreGrade, scoreLabels, scoreColors } from '../utils/scoring'
+import { getRoleWeightedScore, getScoreGrade, getLetterGrade, scoreLabels, scoreColors } from '../utils/scoring'
 import type { Scores, GamePhase } from '../types'
 
 export function MissionReport() {
@@ -26,21 +26,6 @@ export function MissionReport() {
   // Find highest-impact decision for this scenario
   const scenarioDecisions = decisions.filter((d) => d.scenarioId === scenario?.id)
   const scenarioCrises = crisisHistory.filter((c) => c.scenarioIndex === scenarioIndex)
-
-  const getLetterGrade = (score: number): string => {
-    if (score >= 90) return 'A+'
-    if (score >= 85) return 'A'
-    if (score >= 80) return 'A-'
-    if (score >= 75) return 'B+'
-    if (score >= 70) return 'B'
-    if (score >= 65) return 'B-'
-    if (score >= 60) return 'C+'
-    if (score >= 55) return 'C'
-    if (score >= 50) return 'C-'
-    if (score >= 45) return 'D+'
-    if (score >= 40) return 'D'
-    return 'F'
-  }
 
   const handleContinue = () => {
     const assemblyPhases: GamePhase[] = ['innovation_assembly_1', 'innovation_assembly_2', 'innovation_assembly_3']
@@ -74,9 +59,7 @@ export function MissionReport() {
             </div>
           </div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+          <div className="mission-report-scores" style={{
             gap: 'var(--space-sm)',
             marginBottom: 'var(--space-lg)',
           }}>

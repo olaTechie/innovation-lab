@@ -39,6 +39,21 @@ export function applyResourceEffects(
   return delta
 }
 
+export function getLetterGrade(score: number): string {
+  if (score >= 90) return 'A+'
+  if (score >= 85) return 'A'
+  if (score >= 80) return 'A-'
+  if (score >= 75) return 'B+'
+  if (score >= 70) return 'B'
+  if (score >= 65) return 'B-'
+  if (score >= 60) return 'C+'
+  if (score >= 55) return 'C'
+  if (score >= 50) return 'C-'
+  if (score >= 45) return 'D+'
+  if (score >= 40) return 'D'
+  return 'F'
+}
+
 export function getScoreGrade(score: number): { label: string; color: string } {
   if (score >= 80) return { label: 'Excellent', color: 'var(--color-success)' }
   if (score >= 60) return { label: 'Good', color: 'var(--color-accent)' }
