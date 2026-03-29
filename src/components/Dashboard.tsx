@@ -23,12 +23,12 @@ export function Dashboard({ scores, previousScores, compact }: DashboardProps) {
               <span className="metric-bar-label">{scoreLabels[key]}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span className="metric-bar-value" style={{ color: grade.color }}>
-                  {value}
+                  {value}%
                 </span>
                 <span className="text-xs" style={{ marginLeft: 4, opacity: 0.7 }}>{grade.label}</span>
                 {delta !== undefined && delta !== 0 && (
                   <span className={`score-delta ${delta > 0 ? 'positive' : 'negative'}`}>
-                    {delta > 0 ? '+' : ''}{delta}
+                    {delta > 0 ? '+' : ''}{delta}%
                   </span>
                 )}
               </span>
@@ -161,7 +161,7 @@ export function ScoreSummary({ scores }: { scores: Scores }) {
         const grade = getScoreGrade(value)
         return (
           <div key={key} className="stat-card">
-            <div className="stat-card-value" style={{ color: grade.color }}>{value}</div>
+            <div className="stat-card-value" style={{ color: grade.color }}>{value}%</div>
             <div className="stat-card-label">{scoreLabels[key]}</div>
             <div className="stat-card-trend" style={{ color: grade.color }}>{grade.label}</div>
           </div>

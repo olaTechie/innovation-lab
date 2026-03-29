@@ -124,7 +124,7 @@ export function Sandbox() {
                   <div key={key} className="custom-slider">
                     <label>
                       <span>{scoreLabels[key]}</span>
-                      <span className="font-mono font-semibold">{value}</span>
+                      <span className="font-mono font-semibold">{value}%</span>
                     </label>
                     <input
                       type="range"

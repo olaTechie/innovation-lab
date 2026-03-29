@@ -68,7 +68,7 @@ export function ShareCard() {
 
       ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
       ctx.font = '700 13px system-ui'
-      ctx.fillText(String(value), 510, y)
+      ctx.fillText(`${value}%`, 510, y)
     })
 
     // Stats

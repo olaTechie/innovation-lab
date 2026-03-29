@@ -50,7 +50,7 @@ export function ScoreReveal({ effects, currentScores, previousScores, narrativeF
         {primaryKey && primaryValue !== undefined && (phase === 'primary' || phase === 'narrative' || phase === 'bars') && (
           <div className="score-reveal-primary animate-fade-in-up">
             <span style={{ color: primaryValue > 0 ? 'var(--color-success)' : 'var(--color-danger)' }}>
-              {primaryValue > 0 ? '+' : ''}{primaryValue} {scoreLabels[primaryKey]}
+              {primaryValue > 0 ? '+' : ''}{primaryValue}% {scoreLabels[primaryKey]}
             </span>
           </div>
         )}
@@ -78,10 +78,10 @@ export function ScoreReveal({ effects, currentScores, previousScores, narrativeF
                     />
                   </div>
                   <span className="score-reveal-bar-value" style={{ color }}>
-                    {value}
+                    {value}%
                     {delta !== 0 && (
                       <span style={{ fontSize: '0.7rem', marginLeft: 4, color: delta > 0 ? 'var(--color-success)' : 'var(--color-danger)' }}>
-                        {delta > 0 ? '+' : ''}{delta}
+                        {delta > 0 ? '+' : ''}{delta}%
                       </span>
                     )}
                   </span>

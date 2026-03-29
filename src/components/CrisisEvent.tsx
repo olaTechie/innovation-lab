@@ -52,7 +52,7 @@ export function CrisisEvent({ crisis, onRespond }: CrisisEventProps) {
                 padding: '4px 10px',
               }}
             >
-              {scoreLabels[key]} {value > 0 ? '+' : ''}{value}
+              {scoreLabels[key]} {value > 0 ? '+' : ''}{value}%
             </span>
           ))}
         </div>
@@ -82,7 +82,7 @@ export function CrisisEvent({ crisis, onRespond }: CrisisEventProps) {
                     className="text-xs"
                     style={{ color: value > 0 ? 'var(--color-success)' : 'var(--color-danger)' }}
                   >
-                    {scoreLabels[key]} {value > 0 ? '+' : ''}{value}
+                    {scoreLabels[key]} {value > 0 ? '+' : ''}{value}%
                   </span>
                 ))}
               </div>

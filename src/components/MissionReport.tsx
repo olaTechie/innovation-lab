@@ -66,7 +66,7 @@ export function MissionReport() {
             {(Object.entries(scores) as [keyof Scores, number][]).map(([key, value]) => (
               <div key={key} style={{ background: 'var(--color-bg-input)', borderRadius: 'var(--radius-sm)', padding: '8px', textAlign: 'center' }}>
                 <div className="font-mono font-bold" style={{ fontSize: '1.2rem', color: scoreColors[key] }}>
-                  {value}
+                  {value}%
                 </div>
                 <div className="text-xs text-muted">{scoreLabels[key]}</div>
               </div>
