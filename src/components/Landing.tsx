@@ -28,7 +28,7 @@ export function Landing() {
   const handleStart = () => {
     resetGame()
     startGame()
-    setPhase('role_selection')
+    setPhase('mission_briefing')
   }
 
   const handleResume = () => {

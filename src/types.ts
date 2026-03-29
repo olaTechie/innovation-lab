@@ -72,6 +72,7 @@ export interface Scores {
 
 export type GamePhase =
   | 'landing'
+  | 'mission_briefing'
   | 'role_selection'
   | 'hidden_objectives'
   | 'country_briefing'

@@ -11,6 +11,7 @@ import { AchievementToast } from './components/AchievementToast'
 import { StreakIndicator } from './components/StreakIndicator'
 import { HiddenObjectives } from './components/HiddenObjectives'
 import { MissionReport } from './components/MissionReport'
+import { MissionBriefing } from './components/MissionBriefing'
 
 function ScenarioWrapper() {
   const { scenarioIndex, decisionPointIndex } = useGameStore()
@@ -25,6 +26,8 @@ export default function App() {
     switch (phase) {
       case 'landing':
         return <Landing />
+      case 'mission_briefing':
+        return <MissionBriefing />
       case 'role_selection':
         return <RoleSelection />
       case 'hidden_objectives':
@@ -52,7 +55,7 @@ export default function App() {
     }
   }
 
-  const showXPBar = !['landing', 'role_selection'].includes(phase)
+  const showXPBar = !['landing', 'mission_briefing', 'role_selection'].includes(phase)
 
   return (
     <div style={{ minHeight: '100vh' }}>
